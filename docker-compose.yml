@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  
+  react:
+    container_name: react
+    build: ./client
+    ports:
+      - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+    volumes:
+      - ./client:/app
+      - ./app/node_modules
+    env_file:
+      - .env
+
+  express:
+    container_name: express
+    build: ./server
+    ports:
+      - $EXPRESS_LOCAL_PORT:$EXPRESS_DOCKER_PORT
+    volumes:
+      - ./server:/app
+      - ./app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+    restart: always
+    volumes:
+      - ./tmp/db:/data/db
