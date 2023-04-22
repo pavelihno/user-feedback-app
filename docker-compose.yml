@@ -41,6 +41,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_ROOT_USER_PASSWORD
       - MONGO_INITDB_DATABASE=$MONGODB_DATABASE
     volumes:
+      - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./tmp/db:/data/db
   
   mongo-express:
@@ -48,10 +49,11 @@ services:
     container_name: mongo-express
     ports:
       - $MONGOEXPRESS_LOCAL_PORT:$MONGOEXPRESS_DOCKER_PORT
+    restart: always
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongo
-      - ME_CONFIG_MONGODB_PORT=$MONGODB_DOCKER_PORT
       - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=$MONGODB_DATABASE
       - ME_CONFIG_MONGODB_AUTH_USERNAME=$MONGODB_ROOT_USER
       - ME_CONFIG_MONGODB_AUTH_PASSWORD=$MONGODB_ROOT_USER_PASSWORD
       - ME_CONFIG_BASICAUTH_USERNAME=$MONGODB_BASIC_USER
