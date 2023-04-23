@@ -37,7 +37,7 @@ const login = async (req, res) => {
         if (!isMatch) {
             return authError(res, 'Invalid email or password');
         }
-        const token = signJwt(user._id);
+        const token = signJWT(user._id);
         res.json({ token });
     } catch (error) {
         return internalServerError(res, error.message);

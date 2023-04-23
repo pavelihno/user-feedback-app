@@ -36,7 +36,6 @@ app.post('/register', registerValidator, register);
 
 app.post('/login', login);
 
-
 app.post('/upload', requireAuth, requireAvatar, uploadAvatarValidator, uploadAvatar);
 
 
