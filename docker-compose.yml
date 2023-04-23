@@ -24,6 +24,7 @@ services:
       - $EXPRESS_LOCAL_PORT:$EXPRESS_DOCKER_PORT
     volumes:
       - ./server:/app
+      - ./server/storage:/app/storage
       - /app/node_modules
     env_file:
       - .env
@@ -42,7 +43,7 @@ services:
       - MONGO_INITDB_DATABASE=$MONGODB_DATABASE
     volumes:
       - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ./tmp/db:/data/db
+      - ./db/tmp:/data/db
   
   mongo-express:
     image: mongo-express

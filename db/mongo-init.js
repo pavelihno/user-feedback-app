@@ -6,6 +6,10 @@ db.createUser(
             {
                 role: "dbAdmin",
                 db: `${process.env.MONGO_INITDB_DATABASE}`
+            },
+            {
+                role: "readWrite",
+                db: `${process.env.MONGO_INITDB_DATABASE}`
             }
         ]
     }
