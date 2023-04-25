@@ -1,5 +1,4 @@
 import User from '../models/user.js';
-import bcrypt from 'bcryptjs';
 import { validationResult } from 'express-validator';
 
 import { signJWT } from '../utils/jwt.js';
@@ -33,8 +32,8 @@ const login = async (req, res) => {
         if (!user) {
             return authError(res, 'Invalid email or password');
         }
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
+        const isPasswordCorrect = await user.isPasswordCorrect(password);
+        if (!isPasswordCorrect) {
             return authError(res, 'Invalid email or password');
         }
         const token = signJWT(user._id);
