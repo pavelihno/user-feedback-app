@@ -49,4 +49,4 @@ userSchema.methods.isPasswordCorrect = async function (candidatePassword) {
 
 const User = mongoose.model('User', userSchema);
 
-export default User;
+export { User, userSchema };

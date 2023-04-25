@@ -1,4 +1,4 @@
-import User from '../models/user.js';
+import { User } from '../models/user.js';
 import { notFoundError, internalServerError, badRequestError } from '../utils/errors.js';
 import { validationResult } from 'express-validator';
 import { deleteFile } from '../utils/fileStorage.js';

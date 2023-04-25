@@ -1,8 +1,8 @@
-import User from '../models/user.js';
 import { validationResult } from 'express-validator';
 
 import { signJWT } from '../utils/jwt.js';
 import { authError, internalServerError, badRequestError } from '../utils/errors.js';
+import { User } from '../models/user.js';
 
 
 const register = async (req, res) => {
