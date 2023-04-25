@@ -1,6 +1,6 @@
-import { authError, accessDeniedError, internalServerError } from '../utils/errors.js';
-import { verifyJWT } from './jwt.js';
-import User from '../models/user.js';
+import { authError, accessDeniedError, internalServerError } from '../errors.js';
+import { verifyJWT } from '../jwt.js';
+import User from '../../models/user.js';
 
 
 const requireAuth = async (req, res, next) => {

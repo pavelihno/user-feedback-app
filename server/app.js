@@ -4,8 +4,8 @@ import mongoose from 'mongoose';
 import { register, login } from './controllers/authController.js';
 import { uploadAvatar } from './controllers/profileController.js';
 import { registerValidator, uploadAvatarValidator } from './utils/validators.js';
-import { requireAvatar } from './utils/uploadMiddleware.js';
-import { requireAuth } from './utils/authMiddleware.js';
+import { requireAvatar } from './utils/middlewares/uploadMiddleware.js';
+import { requireAuth } from './utils/middlewares/authMiddleware.js';
 
 
 const connectDB = async () => {
