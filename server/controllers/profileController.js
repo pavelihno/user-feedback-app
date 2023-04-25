@@ -1,6 +1,7 @@
 import User from '../models/user.js';
 import { notFoundError, internalServerError, badRequestError } from '../utils/errors.js';
 import { validationResult } from 'express-validator';
+import { deleteFile } from '../utils/fileStorage.js';
 
 
 const uploadAvatar = async (req, res) => {
@@ -11,6 +12,9 @@ const uploadAvatar = async (req, res) => {
             return notFoundError(res, 'User not found');
         }
         if (errors.isEmpty()) {
+            if (user.avatarPath) {
+                deleteFile(user.avatarPath);
+            }
             user.avatarPath = req.file.path;
             await user.save();
             return res.json({ message: 'Avatar uploaded successfully' });
