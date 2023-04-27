@@ -11,15 +11,15 @@ const register = async (req, res) => {
         if (!errors.isEmpty()) {
             return badRequestError(res, errors.array());
         }
-        const { name, email, password } = req.body;
+        const { email } = req.body;
         let user = await User.findOne({ email });
         if (user) {
             return authError(res, 'Invalid email or password');
         }
-        user = new User({ name, email, password });
+        user = new User(req.body);
         await user.save();
         const token = signJWT(user._id);
-        res.json({ token });
+        return res.status(200).json({ token });
     } catch (error) {
         return internalServerError(res, error.message);
     }
@@ -37,7 +37,7 @@ const login = async (req, res) => {
             return authError(res, 'Invalid email or password');
         }
         const token = signJWT(user._id);
-        res.json({ token });
+        return res.status(200).json({ token });
     } catch (error) {
         return internalServerError(res, error.message);
     }

@@ -1,6 +1,7 @@
+import { validationResult } from 'express-validator';
+
 import { User } from '../models/user.js';
 import { notFoundError, internalServerError, badRequestError } from '../utils/errors.js';
-import { validationResult } from 'express-validator';
 import { deleteFile } from '../utils/fileStorage.js';
 
 
@@ -17,7 +18,7 @@ const uploadAvatar = async (req, res) => {
             }
             user.avatarPath = req.file.path;
             await user.save();
-            return res.json({ message: 'Avatar uploaded successfully' });
+            return res.status(200).json({ message: 'Avatar uploaded successfully' });
         }
         return badRequestError(res, errors.array());
     } catch (error) {
