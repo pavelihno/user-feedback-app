@@ -1,7 +1,6 @@
-import mongoose from 'mongoose';
+import { mongoose } from 'mongoose';
 
 import { reviewSchema } from './review.js';
-import { userSchema } from './user.js';
 
 
 export const productSchema = new mongoose.Schema({
@@ -19,15 +18,17 @@ export const productSchema = new mongoose.Schema({
     },
     attributes: {
         type: Map,
-        of: String,
+        of: [mongoose.Types.Mixed],
         required: true
     },
     reviews: {
-        type: [reviewSchema],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Review',
         default: []
     },
     submittedBy: {
-        type: [userSchema],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
         default: []
     },
     isApproved: {

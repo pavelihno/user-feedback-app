@@ -8,6 +8,10 @@ export const attributeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    key: {
+        type: String,
+        required: true,
+    },
     type: {
         type: String,
         required: true,

@@ -29,9 +29,9 @@ export const deleteProduct = async (req, res) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
         if (!product) {
-            return notFoundError(res, 'Product type not found');
+            return notFoundError(res, 'Product not found');
         }
-        return res.status(200).json({ message: 'Product type deleted' });
+        return res.status(200).json({ message: 'Product deleted' });
     } catch (error) {
         return internalServerError(res, error.message);
     }
@@ -48,7 +48,7 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id).populate('productType');
+        const product = await Product.findById(req.params.id).populate('productType').populate('reviews').populate('submittedBy');
         if (!product) {
             return notFoundError(res, 'Product not found');
         }
