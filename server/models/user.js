@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 
+const userRoles = ['user', 'admin'];
+
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -18,7 +20,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: userRoles,
         default: 'user',
         required: true
     },
@@ -38,6 +40,8 @@ userSchema.pre('save', async function (next) {
         next(error);
     }
 });
+
+userSchema.statics.getUserRoles = () => { return userRoles };
 
 userSchema.methods.isPasswordCorrect = async function (candidatePassword) {
     try {

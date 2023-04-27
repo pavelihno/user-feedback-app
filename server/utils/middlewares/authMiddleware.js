@@ -13,7 +13,7 @@ const getUser = async (req) => {
 
 const requireAuth = async (req, res, next) => {
     try {
-        const user = getUser(req);
+        const user = await getUser(req);
         if (!user) {
             return authError(res, 'Invalid token');
         }

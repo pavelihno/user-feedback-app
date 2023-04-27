@@ -1,5 +1,22 @@
-import { body } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
+import { Types } from 'mongoose';
 
+import { Attribute } from '../models/attribute.js';
+import { User } from '../models/user.js';
+import { notFoundError, badRequestError } from './errors.js';
+
+
+const validateRequest = (validators) => {
+    return async (req, res, next) => {
+        await Promise.all(validators.map((validator) => validator.run(req)));
+        const errors = validationResult(req);
+        if (errors.isEmpty()) {
+            next();
+        } else {
+            return badRequestError(res, errors.array());
+        }
+    };
+}
 
 const registerValidator = [
     body('email')
@@ -17,8 +34,19 @@ const registerValidator = [
         .withMessage('Name must be at least 3 characters long'),
     body('role')
         .optional()
-        .isIn(['user', 'admin'])
-        .withMessage('Role must be either "user" or "admin"'),
+        .isIn(User.getUserRoles())
+        .withMessage('Role does not exist')
+];
+
+const loginValidator = [
+    body('email')
+        .trim()
+        .isEmail()
+        .withMessage('Invalid email address')
+        .normalizeEmail(),
+    body('password')
+        .notEmpty()
+        .withMessage('Password is required')
 ];
 
 const uploadAvatarValidator = [
@@ -32,9 +60,66 @@ const uploadAvatarValidator = [
             if (!allowedExtensions.includes(fileExtension)) {
                 throw new Error(`Avatar image must be one of the following file types: ${allowedExtensions.join(', ')}`);
             }
-
             return true;
         }),
 ];
 
-export { registerValidator, uploadAvatarValidator };
+const createProductTypeValidator = [
+    body('name')
+        .notEmpty()
+        .withMessage('Product type name is required'),
+    body('attributes')
+        .isArray({ min: 1 })
+        .withMessage('At least one attribute is required')
+        .custom((attributes) => {
+            for (let i = 0; i < attributes.length; i++) {
+                if (!attributes[i].name) {
+                    throw new Error('Attribute name is required');
+                }
+                if (!attributes[i].type) {
+                    throw new Error('Attribute type is required');
+                }
+                if (!Attribute.getAttributeTypes().includes(attributes[i].type)) {
+                    throw new Error(`Invalid attribute type: ${attributes[i].type}`);
+                }
+            }
+            return true;
+        })
+];
+
+const updateProductTypeValidator = [
+    body('name')
+        .optional()
+        .notEmpty()
+        .withMessage('Product type name is required'),
+    body('attributes')
+        .optional()
+        .isArray({ min: 1 })
+        .withMessage('At least one attribute is required')
+        .custom((attributes) => {
+            for (let i = 0; i < attributes.length; i++) {
+                if (!attributes[i].name) {
+                    throw new Error('Attribute name is required');
+                }
+                if (!attributes[i].type) {
+                    throw new Error('Attribute type is required');
+                }
+                if (!Attribute.getAttributeTypes().includes(attributes[i].type)) {
+                    throw new Error(`Invalid attribute type: ${attributes[i].type}`);
+                }
+            }
+            return true;
+        })
+];
+
+const objectIdValidator = [
+    param('id')
+        .custom((value) => {
+            if (!Types.ObjectId.isValid(value)) {
+                throw new Error('Invalid ID');
+            }
+            return true;
+        })
+];
+
+export { validateRequest, registerValidator, loginValidator, objectIdValidator, uploadAvatarValidator, createProductTypeValidator, updateProductTypeValidator };

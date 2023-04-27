@@ -1,16 +1,10 @@
-import { validationResult } from 'express-validator';
-
 import { signJWT } from '../utils/jwt.js';
-import { authError, internalServerError, badRequestError } from '../utils/errors.js';
+import { authError, internalServerError } from '../utils/errors.js';
 import { User } from '../models/user.js';
 
 
 const register = async (req, res) => {
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return badRequestError(res, errors.array());
-        }
         const { email } = req.body;
         let user = await User.findOne({ email });
         if (user) {

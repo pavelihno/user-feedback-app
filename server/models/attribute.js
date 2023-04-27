@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
 
+const attributeTypes = ['text', 'integer', 'float', 'location', 'boolean', 'date', 'enum', 'list'];
+
 const attributeSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -9,9 +11,18 @@ const attributeSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true,
-        enum: ['text', 'number', 'location', 'boolean', 'date', 'enum'],
+        enum: attributeTypes,
+    },
+    options: {
+        type: [String],
+        default: undefined,
+        required: function () {
+            return this.type === 'enum';
+        },
     },
 });
+
+attributeSchema.statics.getAttributeTypes = () => { return attributeTypes };
 
 const Attribute = mongoose.model('Attribute', attributeSchema);
 

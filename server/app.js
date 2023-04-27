@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 
 import { register, login } from './controllers/authController.js';
 import { uploadAvatar } from './controllers/userController.js';
-import { registerValidator, uploadAvatarValidator } from './utils/validators.js';
+import { createProductType, updateProductType, deleteProductType, getProductType, getProductTypes } from './controllers/productTypeController.js';
+import { validateRequest, registerValidator, objectIdValidator, uploadAvatarValidator, createProductTypeValidator, updateProductTypeValidator, loginValidator } from './utils/validators.js';
 import { requireAvatar } from './utils/middlewares/uploadMiddleware.js';
-import { requireAuth } from './utils/middlewares/authMiddleware.js';
+import { requireAdmin, requireAuth } from './utils/middlewares/authMiddleware.js';
 
 
 const connectDB = async () => {
@@ -32,12 +33,20 @@ app.get('/', requireAuth, (req, res) => {
     res.send('Home Route');
 });
 
-app.post('/register', registerValidator, register);
 
-app.post('/login', login);
+// auth
+app.post('/register', validateRequest(registerValidator), register);
+app.post('/login', validateRequest(loginValidator), login);
 
-app.post('/upload', requireAuth, requireAvatar, uploadAvatarValidator, uploadAvatar);
+// user
+app.post('/upload', requireAuth, requireAvatar, validateRequest(uploadAvatarValidator), uploadAvatar);
 
 
+// productType
+app.post('/productTypes', requireAdmin, validateRequest(createProductTypeValidator), createProductType);
+app.put('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator, updateProductTypeValidator), updateProductType);
+app.delete('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator), deleteProductType);
+app.get('/productTypes', requireAuth, getProductTypes);
+app.get('/productTypes/:id', requireAuth, validateRequest(objectIdValidator), getProductType);
 
 export default app;
