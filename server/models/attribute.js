@@ -24,6 +24,4 @@ export const attributeSchema = new mongoose.Schema({
 
 attributeSchema.statics.getAttributeTypes = () => { return attributeTypes };
 
-// validate attribute values
-
 export const Attribute = mongoose.model('Attribute', attributeSchema);

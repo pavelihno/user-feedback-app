@@ -3,7 +3,8 @@ import { Types } from 'mongoose';
 
 import { Attribute } from '../models/attribute.js';
 import { User } from '../models/user.js';
-import { notFoundError, badRequestError } from './errors.js';
+import { ProductType } from '../models/productType.js';
+import { badRequestError } from './errors.js';
 
 
 export const validateRequest = (validators) => {
@@ -17,6 +18,16 @@ export const validateRequest = (validators) => {
         }
     };
 }
+
+export const objectIdValidator = [
+    param('id')
+        .custom((value) => {
+            if (!Types.ObjectId.isValid(value)) {
+                throw new Error('Invalid ID');
+            }
+            return true;
+        })
+];
 
 export const registerValidator = [
     body('email')
@@ -64,6 +75,21 @@ export const uploadAvatarValidator = [
         }),
 ];
 
+const validateProductTypeAttributes = (attributes) => {
+    for (let i = 0; i < attributes.length; i++) {
+        if (!attributes[i].name) {
+            throw new Error('Attribute name is required');
+        }
+        if (!attributes[i].type) {
+            throw new Error('Attribute type is required');
+        }
+        if (!Attribute.getAttributeTypes().includes(attributes[i].type)) {
+            throw new Error(`Invalid attribute type: ${attributes[i].type}`);
+        }
+    }
+    return true;
+};
+
 export const createProductTypeValidator = [
     body('name')
         .notEmpty()
@@ -71,20 +97,7 @@ export const createProductTypeValidator = [
     body('attributes')
         .isArray({ min: 1 })
         .withMessage('At least one attribute is required')
-        .custom((attributes) => {
-            for (let i = 0; i < attributes.length; i++) {
-                if (!attributes[i].name) {
-                    throw new Error('Attribute name is required');
-                }
-                if (!attributes[i].type) {
-                    throw new Error('Attribute type is required');
-                }
-                if (!Attribute.getAttributeTypes().includes(attributes[i].type)) {
-                    throw new Error(`Invalid attribute type: ${attributes[i].type}`);
-                }
-            }
-            return true;
-        })
+        .custom(validateProductTypeAttributes)
 ];
 
 export const updateProductTypeValidator = [
@@ -96,30 +109,116 @@ export const updateProductTypeValidator = [
         .optional()
         .isArray({ min: 1 })
         .withMessage('At least one attribute is required')
-        .custom((attributes) => {
-            for (let i = 0; i < attributes.length; i++) {
-                if (!attributes[i].name) {
-                    throw new Error('Attribute name is required');
-                }
-                if (!attributes[i].type) {
-                    throw new Error('Attribute type is required');
-                }
-                if (!Attribute.getAttributeTypes().includes(attributes[i].type)) {
-                    throw new Error(`Invalid attribute type: ${attributes[i].type}`);
-                }
-            }
-            return true;
-        })
+        .custom(validateProductTypeAttributes)
 ];
 
-export const createProductValidator = [];
+const validateProductAttributes = async (attributes, { req }) => {
+    if (!req.body.productType) {
+        if (Object.keys(attributes).length > 0) {
+            throw new Error('Attributes should be empty when product type is not provided');
+        }
+        return true;
+    }
+    if (!req.body.attributes) {
 
-export const objectIdValidator = [
-    param('id')
-        .custom((value) => {
-            if (!Types.ObjectId.isValid(value)) {
-                throw new Error('Invalid ID');
+    }
+    const productType = await ProductType.findById(req.body.productType).lean();
+    if (!productType) {
+        throw new Error('Invalid product type');
+    }
+    const allowedAttributes = productType.attributes.map((attr) => attr.name);
+    const receivedAttributes = Object.keys(attributes);
+    const isValid = receivedAttributes.every((attr) => allowedAttributes.includes(attr));
+    if (!isValid) {
+        throw new Error('Invalid attributes product type');
+    }
+    for (const [attr, value] of Object.entries(attributes)) {
+        const attributeType = productType.attributes.find((a) => a.name === attr)?.type;
+        if (!attributeType) {
+            throw new Error(`Invalid attribute type for ${attr}`);
+        }
+        const allowedTypes = ['text', 'integer', 'float', 'location', 'boolean', 'date', 'enum', 'list'];
+        if (!allowedTypes.includes(attributeType)) {
+            throw new Error(`Invalid attribute type for ${attr}`);
+        }
+        if (attributeType === 'enum') {
+            const options = productType.attributes.find((a) => a.name === attr)?.options;
+            if (!options || !options.includes(value)) {
+                throw new Error(`Invalid value for ${attr}`);
             }
-            return true;
-        })
+        } else if (attributeType === 'list') {
+            if (!Array.isArray(value)) {
+                throw new Error(`Invalid value for ${attr}`);
+            }
+        } else if (typeof value !== attributeType) {
+            throw new Error(`Invalid value type for ${attr}`);
+        }
+        else if (attributeType === 'text') {
+            if (typeof value !== 'string') {
+                throw new Error(`Attribute "${attr}" must be of type "text"`);
+            }
+        }
+        else if (attributeType === 'integer') {
+            if (!Number.isInteger(value)) {
+                throw new Error(`Attribute "${attr}" must be of type "integer"`);
+            }
+        }
+        else if (attributeType === 'float') {
+            if (typeof value !== 'number' || Number.isNaN(value)) {
+                throw new Error(`Attribute "${attr}" must be of type "float"`);
+            }
+        }
+        else if (attributeType === 'location') {
+            if (!value || typeof value.lat !== 'number' || typeof value.long !== 'number') {
+                throw new Error(`Attribute "${attr}" must be of type "location"`);
+            }
+        }
+        else if (attributeType === 'boolean') {
+            if (typeof value !== 'boolean') {
+                throw new Error(`Attribute "${attr}" must be of type "boolean"`);
+            }
+        }
+        else if (attributeType === 'date') {
+            if (isNaN(Date.parse(value))) {
+                throw new Error(`Attribute "${attr}" must be of type "date"`);
+            }
+        }
+    }
+    return true;
+};
+
+const validateProductProductType = async (productTypeId) => {
+    const productType = await ProductType.findById(productTypeId).lean();
+    if (!productType) {
+        throw new Error('Invalid product type');
+    }
+    return true;
+};
+
+export const createProductValidator = [
+    body('name')
+        .notEmpty()
+        .withMessage('Product name is required'),
+    body('productType')
+        .notEmpty()
+        .withMessage('Product type is required')
+        .custom(validateProductProductType),
+    body('attributes')
+        .optional()
+        .custom(validateProductAttributes),
+];
+
+export const updateProductValidator = [
+    body('name')
+        .optional()
+        .notEmpty()
+        .withMessage('Product name is required'),
+    body('productType')
+        .optional()
+        .notEmpty()
+        .withMessage('Product type is required')
+        .custom(validateProductProductType),
+    body('attributes')
+        .optional()
+        .custom(validateProductAttributes),
 ];

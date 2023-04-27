@@ -4,7 +4,8 @@ import mongoose from 'mongoose';
 import { register, login } from './controllers/authController.js';
 import { uploadAvatar } from './controllers/userController.js';
 import { createProductType, updateProductType, deleteProductType, getProductType, getProductTypes } from './controllers/productTypeController.js';
-import { validateRequest, registerValidator, objectIdValidator, uploadAvatarValidator, createProductTypeValidator, updateProductTypeValidator, loginValidator } from './utils/validators.js';
+import { createProduct, updateProduct, deleteProduct, getProduct, getProducts } from './controllers/productController.js';
+import { validateRequest, registerValidator, loginValidator, objectIdValidator, uploadAvatarValidator, createProductTypeValidator, updateProductTypeValidator, createProductValidator, updateProductValidator } from './utils/validators.js';
 import { requireAvatar } from './utils/middlewares/uploadMiddleware.js';
 import { requireAdmin, requireAuth } from './utils/middlewares/authMiddleware.js';
 
@@ -48,5 +49,14 @@ app.put('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator, up
 app.delete('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator), deleteProductType);
 app.get('/productTypes', requireAuth, getProductTypes);
 app.get('/productTypes/:id', requireAuth, validateRequest(objectIdValidator), getProductType);
+
+// product
+app.post('/products', requireAuth, validateRequest(createProductValidator), createProduct);
+app.put('/products/:id', requireAuth, validateRequest(objectIdValidator, updateProductValidator), updateProduct);
+app.delete('/products/:id', requireAuth, validateRequest(objectIdValidator), deleteProduct);
+app.get('/products', getProducts);
+app.get('/products/:id', validateRequest(objectIdValidator), getProduct);
+
+
 
 export default app;

@@ -4,23 +4,27 @@ import { reviewSchema } from './review.js';
 import { userSchema } from './user.js';
 
 
-const productSchema = new mongoose.Schema({
+export const productSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: true
     },
     description: {
-        type: String,
-        required: true,
+        type: String
     },
-    type: {
+    productType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ProductType',
-        required: true,
+        required: true
+    },
+    attributes: {
+        type: Map,
+        of: String,
+        required: true
     },
     reviews: {
         type: [reviewSchema],
-        default: [],
+        default: []
     },
     submittedBy: {
         type: [userSchema],
@@ -29,10 +33,8 @@ const productSchema = new mongoose.Schema({
     isApproved: {
         type: Boolean,
         required: true,
-        default: false,
-    },
+        default: false
+    }
 });
 
-const Product = mongoose.model('Product', productSchema);
-
-export { Product, productSchema };
+export const Product = mongoose.model('Product', productSchema);
