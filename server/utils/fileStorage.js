@@ -4,7 +4,7 @@ import fs from 'fs';
 import crypto from "crypto";
 
 
-const getFileStorage = (destinationFolder) => {
+export const getFileStorage = (destinationFolder) => {
     const storage = multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, path.join('storage', destinationFolder));
@@ -16,7 +16,7 @@ const getFileStorage = (destinationFolder) => {
     return storage;
 };
 
-const deleteFile = (filePath) => {
+export const deleteFile = (filePath) => {
     fs.unlink(filePath, (err) => {
         if (err) {
             console.error(err);
@@ -40,6 +40,3 @@ const generateFileName = (originalFileName) => {
     
     return hashedFileName;
 }
-
-
-export { getFileStorage, deleteFile };

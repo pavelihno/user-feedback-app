@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { commentSchema } from './comment.js';
 
 
-const reviewSchema = new mongoose.Schema({
+export const reviewSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -29,6 +29,4 @@ const reviewSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-const Review = mongoose.model('Review', reviewSchema);
-
-export { Review, reviewSchema };
+export const Review = mongoose.model('Review', reviewSchema);

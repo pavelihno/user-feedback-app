@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 const userRoles = ['user', 'admin'];
 
-const userSchema = new mongoose.Schema({
+export const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
@@ -52,6 +52,4 @@ userSchema.methods.isPasswordCorrect = async function (candidatePassword) {
     }
 };
 
-const User = mongoose.model('User', userSchema);
-
-export { User, userSchema };
+export const User = mongoose.model('User', userSchema);

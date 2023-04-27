@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { attributeSchema } from './attribute.js';
 
 
-const productTypeSchema = new mongoose.Schema({
+export const productTypeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -14,6 +14,4 @@ const productTypeSchema = new mongoose.Schema({
     },
 });
 
-const ProductType = mongoose.model('ProductType', productTypeSchema);
-
-export { ProductType, productTypeSchema };
+export const ProductType = mongoose.model('ProductType', productTypeSchema);

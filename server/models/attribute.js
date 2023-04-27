@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const attributeTypes = ['text', 'integer', 'float', 'location', 'boolean', 'date', 'enum', 'list'];
 
-const attributeSchema = new mongoose.Schema({
+export const attributeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -24,6 +24,6 @@ const attributeSchema = new mongoose.Schema({
 
 attributeSchema.statics.getAttributeTypes = () => { return attributeTypes };
 
-const Attribute = mongoose.model('Attribute', attributeSchema);
+// validate attribute values
 
-export { Attribute, attributeSchema };
+export const Attribute = mongoose.model('Attribute', attributeSchema);

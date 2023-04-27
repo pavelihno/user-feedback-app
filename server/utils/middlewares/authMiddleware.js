@@ -11,7 +11,7 @@ const getUser = async (req) => {
 };
 
 
-const requireAuth = async (req, res, next) => {
+export const requireAuth = async (req, res, next) => {
     try {
         const user = await getUser(req);
         if (!user) {
@@ -24,7 +24,7 @@ const requireAuth = async (req, res, next) => {
     }
 };
 
-const requireAdmin = async (req, res, next) => {
+export const requireAdmin = async (req, res, next) => {
     const user = await getUser(req);
     try {
         await requireAuth(req, res, async () => {
@@ -37,5 +37,3 @@ const requireAdmin = async (req, res, next) => {
         return accessDeniedError(res, 'Access denied');
     }
 };
-
-export { requireAdmin, requireAuth };

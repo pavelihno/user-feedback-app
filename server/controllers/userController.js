@@ -3,7 +3,7 @@ import { notFoundError, internalServerError } from '../utils/errors.js';
 import { deleteFile } from '../utils/fileStorage.js';
 
 
-const uploadAvatar = async (req, res) => {
+export const uploadAvatar = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         if (!user) {
@@ -19,5 +19,3 @@ const uploadAvatar = async (req, res) => {
         return internalServerError(res, error.message);
     }
 };
-
-export { uploadAvatar };

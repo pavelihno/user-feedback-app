@@ -6,7 +6,7 @@ import { User } from '../models/user.js';
 import { notFoundError, badRequestError } from './errors.js';
 
 
-const validateRequest = (validators) => {
+export const validateRequest = (validators) => {
     return async (req, res, next) => {
         await Promise.all(validators.map((validator) => validator.run(req)));
         const errors = validationResult(req);
@@ -18,7 +18,7 @@ const validateRequest = (validators) => {
     };
 }
 
-const registerValidator = [
+export const registerValidator = [
     body('email')
         .trim()
         .isEmail()
@@ -38,7 +38,7 @@ const registerValidator = [
         .withMessage('Role does not exist')
 ];
 
-const loginValidator = [
+export const loginValidator = [
     body('email')
         .trim()
         .isEmail()
@@ -49,7 +49,7 @@ const loginValidator = [
         .withMessage('Password is required')
 ];
 
-const uploadAvatarValidator = [
+export const uploadAvatarValidator = [
     body('avatar')
         .custom((value, { req }) => {
             if (!req.file) {
@@ -64,7 +64,7 @@ const uploadAvatarValidator = [
         }),
 ];
 
-const createProductTypeValidator = [
+export const createProductTypeValidator = [
     body('name')
         .notEmpty()
         .withMessage('Product type name is required'),
@@ -87,7 +87,7 @@ const createProductTypeValidator = [
         })
 ];
 
-const updateProductTypeValidator = [
+export const updateProductTypeValidator = [
     body('name')
         .optional()
         .notEmpty()
@@ -112,7 +112,9 @@ const updateProductTypeValidator = [
         })
 ];
 
-const objectIdValidator = [
+export const createProductValidator = [];
+
+export const objectIdValidator = [
     param('id')
         .custom((value) => {
             if (!Types.ObjectId.isValid(value)) {
@@ -121,5 +123,3 @@ const objectIdValidator = [
             return true;
         })
 ];
-
-export { validateRequest, registerValidator, loginValidator, objectIdValidator, uploadAvatarValidator, createProductTypeValidator, updateProductTypeValidator };

@@ -2,7 +2,7 @@ import { ProductType } from "../models/productType.js";
 import { internalServerError, notFoundError } from '../utils/errors.js';
 
 
-const createProductType = async (req, res) => {
+export const createProductType = async (req, res) => {
     try {
         const productType = new ProductType(req.body);
         await productType.save();
@@ -12,7 +12,7 @@ const createProductType = async (req, res) => {
     }
 };
 
-const updateProductType = async (req, res) => {
+export const updateProductType = async (req, res) => {
     try {
         const _id = req.params.id;
         const updatedProductType = await ProductType.findOneAndUpdate({ _id }, req.body, { new: true });
@@ -25,7 +25,7 @@ const updateProductType = async (req, res) => {
     }
 };
 
-const deleteProductType = async (req, res) => {
+export const deleteProductType = async (req, res) => {
     try {
         const productType = await ProductType.findByIdAndDelete(req.params.id);
         if (!productType) {
@@ -37,7 +37,7 @@ const deleteProductType = async (req, res) => {
     }
 };
 
-const getProductTypes = async (req, res) => {
+export const getProductTypes = async (req, res) => {
     try {
         const productTypes = await ProductType.find();
         return res.status(200).json(productTypes);
@@ -46,7 +46,7 @@ const getProductTypes = async (req, res) => {
     }
 };
 
-const getProductType = async (req, res) => {
+export const getProductType = async (req, res) => {
     try {
         const productType = await ProductType.findById(req.params.id);
         if (!productType) {
@@ -57,5 +57,3 @@ const getProductType = async (req, res) => {
         return internalServerError(res, error.message);
     }
 };
-
-export { createProductType, updateProductType, deleteProductType, getProductTypes, getProductType };
