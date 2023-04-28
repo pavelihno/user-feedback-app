@@ -4,7 +4,10 @@ import mongoose from 'mongoose';
 import { Attribute } from '../models/attribute.js';
 import { User } from '../models/user.js';
 import { ProductType } from '../models/productType.js';
+import { Review } from '../models/review.js';
 import { badRequestError } from './errors.js';
+import { Product } from '../models/product.js';
+import { getAllowedExtensions } from './fileStorage.js';
 
 
 export const validateRequest = (validators) => {
@@ -19,14 +22,16 @@ export const validateRequest = (validators) => {
     };
 }
 
+const validateObjectId = (value) => {
+    if (!mongoose.Types.ObjectId.isValid(value)) {
+        throw new Error('Invalid ID');
+    }
+    return true;
+};
+
 export const objectIdValidator = [
     param('id')
-        .custom((value) => {
-            if (!mongoose.Types.ObjectId.isValid(value)) {
-                throw new Error('Invalid ID');
-            }
-            return true;
-        })
+        .custom(validateObjectId)
 ];
 
 export const registerValidator = [
@@ -66,7 +71,7 @@ export const uploadAvatarValidator = [
             if (!req.file) {
                 throw new Error('Avatar image is required');
             }
-            const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+            const allowedExtensions = getAllowedExtensions();
             const fileExtension = req.file.originalname.slice(req.file.originalname.lastIndexOf('.')).toLowerCase();
             if (!allowedExtensions.includes(fileExtension)) {
                 throw new Error(`Avatar image must be one of the following file types: ${allowedExtensions.join(', ')}`);
@@ -217,4 +222,102 @@ export const updateProductValidator = [
     body('attributes')
         .optional()
         .custom(validateProductAttributes)
+];
+
+export const createReviewValidator = [
+    body('title')
+        .trim()
+        .notEmpty()
+        .withMessage('Title is required'),
+    body('text')
+        .trim()
+        .notEmpty()
+        .withMessage('Text is required'),
+    body('product')
+        .trim()
+        .notEmpty()
+        .withMessage('Product is required')
+        .custom(async (productId) => {
+            validateObjectId(productId);
+            const product = await Product.findById(productId).lean();
+            if (!product) {
+                throw new Error('Product not found');
+            }
+            return true;
+        }),
+    body('rating')
+        .isInt({ min: Review.getMinRating(), max: Review.getMaxRating() })
+        .withMessage(`Rating must be an integer between ${Review.getMinRating()} and ${Review.getMaxRating()}`),
+];
+
+export const updateReviewValidator = [
+    body('title')
+        .optional()
+        .trim()
+        .notEmpty()
+        .withMessage('Title is required'),
+    body('text')
+        .trim()
+        .notEmpty()
+        .withMessage('Text is required'),
+    body('rating')
+        .isInt({ min: Review.getMinRating(), max: Review.getMaxRating() })
+        .withMessage(`Rating must be an integer between ${Review.getMinRating()} and ${Review.getMaxRating()}`),
+];
+
+export const uploadAttachmentsValidator = [
+    body('attachments.*')
+        .custom((value, { req }) => {
+            if (!req.files) {
+                throw new Error('At least one attachment is required');
+            }
+            const allowedExtensions = getAllowedExtensions();
+            const attachments = Array.isArray(req.files['attachments']) ? req.files['attachments'] : [req.files['attachments']];
+
+            for (let attachment of attachments) {
+                const fileExtension = attachment.originalname.slice(attachment.originalname.lastIndexOf('.')).toLowerCase();
+                if (!allowedExtensions.includes(fileExtension)) {
+                    throw new Error(`Attachments must be one of the following file types: ${allowedExtensions.join(', ')}`);
+                }
+            }
+            return true;
+        })
+];
+
+
+
+export const createCommentValidator = [
+    body('text')
+        .trim()
+        .notEmpty()
+        .withMessage('Text is required'),
+    body('review')
+        .trim()
+        .notEmpty()
+        .withMessage('Review is required')
+        .custom(async (reviewId) => {
+            validateObjectId(reviewId);
+            const product = await Review.findById(reviewId).lean();
+            if (!product) {
+                throw new Error('Review not found');
+            }
+            return true;
+        }),
+    body('review')
+        .trim()
+        .notEmpty()
+        .withMessage('Review is required')
+];
+
+export const updateCommentValidator = [
+    body('text')
+        .optional()
+        .trim()
+        .notEmpty()
+        .withMessage('Text is required'),
+    body('review')
+        .optional()
+        .trim()
+        .notEmpty()
+        .withMessage('Review is required')
 ];

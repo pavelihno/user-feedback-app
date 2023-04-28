@@ -5,8 +5,17 @@ import { register, login } from './controllers/authController.js';
 import { uploadAvatar } from './controllers/userController.js';
 import { createProductType, updateProductType, deleteProductType, getProductType, getProductTypes } from './controllers/productTypeController.js';
 import { createProduct, updateProduct, deleteProduct, getProduct, getProducts } from './controllers/productController.js';
-import { validateRequest, registerValidator, loginValidator, objectIdValidator, uploadAvatarValidator, createProductTypeValidator, updateProductTypeValidator, createProductValidator, updateProductValidator } from './utils/validators.js';
-import { requireAvatar } from './utils/middlewares/uploadMiddleware.js';
+import { createReview, updateReview, deleteReview, getReview, getReviews, uploadReviewAttachments } from './controllers/reviewController.js';
+import { createComment, updateComment, deleteComment, getComment, getComments } from './controllers/commentController.js';
+import {
+    validateRequest, registerValidator, loginValidator, objectIdValidator,
+    uploadAvatarValidator,
+    createProductTypeValidator, updateProductTypeValidator,
+    createProductValidator, updateProductValidator,
+    createReviewValidator, updateReviewValidator, 
+    createCommentValidator, updateCommentValidator, uploadAttachmentsValidator
+} from './utils/validators.js';
+import { requireAvatar, requireAttachments } from './utils/middlewares/uploadMiddleware.js';
 import { requireAdmin, requireAuth } from './utils/middlewares/authMiddleware.js';
 
 
@@ -57,6 +66,21 @@ app.delete('/products/:id', requireAuth, validateRequest(objectIdValidator), del
 app.get('/products', getProducts);
 app.get('/products/:id', validateRequest(objectIdValidator), getProduct);
 
+
+// review
+app.post('/reviews', requireAuth, validateRequest(createReviewValidator), createReview);
+app.put('/reviews/:id', requireAuth, validateRequest(objectIdValidator, updateReviewValidator), updateReview);
+app.delete('/reviews/:id', requireAuth, validateRequest(objectIdValidator), deleteReview);
+app.get('/reviews', getReviews);
+app.get('/reviews/:id', validateRequest(objectIdValidator), getReview);
+app.post('/reviews/:id/attachments', requireAuth, requireAttachments, validateRequest(uploadAttachmentsValidator), uploadReviewAttachments);
+
+// comment
+app.post('/comments', requireAuth, validateRequest(createCommentValidator), createComment);
+app.put('/comments/:id', requireAuth, validateRequest(objectIdValidator, updateCommentValidator), updateComment);
+app.delete('/comments/:id', requireAuth, validateRequest(objectIdValidator), deleteComment);
+app.get('/comments', getComments);
+app.get('/comments/:id', validateRequest(objectIdValidator), getComment);
 
 
 export default app;

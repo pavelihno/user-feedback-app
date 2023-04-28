@@ -4,6 +4,10 @@ import fs from 'fs';
 import crypto from "crypto";
 
 
+export const getAllowedExtensions = () => {
+    return ['.jpg', '.jpeg', '.png']
+};
+
 export const getFileStorage = (destinationFolder) => {
     const storage = multer.diskStorage({
         destination: function (req, file, cb) {
@@ -30,13 +34,13 @@ export const deleteFile = (filePath) => {
 
 const generateFileName = (originalFileName) => {
     const fileExtension = originalFileName.split(".").pop();
-    
+
     const timestamp = new Date().toISOString().replace(/:/g, "-");
     const randomNumber = Math.floor(Math.random() * 10000);
     const hash = crypto.createHash("sha256");
     hash.update(`${originalFileName}_${timestamp}_${randomNumber}`);
-    
+
     const hashedFileName = `${hash.digest("hex")}.${fileExtension}`;
-    
+
     return hashedFileName;
 }
