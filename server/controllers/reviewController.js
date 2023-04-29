@@ -1,6 +1,7 @@
 import { Review } from "../models/review.js";
 import { Product } from "../models/product.js";
 import { internalServerError, notFoundError, accessDeniedError } from '../utils/errors.js';
+import { deleteFile } from "../utils/fileStorage.js";
 
 
 const isInvalidAccess = (req, review) => {
@@ -71,7 +72,7 @@ export const getReviews = async (req, res) => {
 
 export const getReview = async (req, res) => {
     try {
-        const review = await Review.findById(req.params.id);
+        const review = await Review.findById(req.params.id).populate('createdBy');
         if (!review) {
             return notFoundError(res, 'Review not found');
         }
@@ -87,11 +88,34 @@ export const uploadReviewAttachments = async (req, res) => {
         if (!review) {
             return notFoundError(res, 'Review not found');
         }
+        if (isInvalidAccess(req, review)) {
+            return accessDeniedError(res, 'Access denied');
+        }
         for (let file of req.files) {
             review.attachments.push(file.path)
         }
         await review.save();
         return res.status(200).json({ message: 'Attachments uploaded successfully' });
+    } catch (error) {
+        return internalServerError(res, error.message);
+    }
+};
+
+export const deleteReviewAttachments = async (req, res) => {
+    try {
+        const review = await Review.findById(req.params.id);
+        if (!review) {
+            return notFoundError(res, 'Review not found');
+        }
+        if (isInvalidAccess(req, review)) {
+            return accessDeniedError(res, 'Access denied');
+        }
+        for (let path of req.body.attachments) {
+            review.attachments = review.attachments.filter(attachmentPath => attachmentPath !== path);
+            deleteFile(path);
+        }
+        review.save();
+        return res.status(200).json({ message: 'Attachments deleted successfully' });
     } catch (error) {
         return internalServerError(res, error.message);
     }

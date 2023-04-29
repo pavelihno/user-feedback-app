@@ -5,7 +5,7 @@ import { register, login } from './controllers/authController.js';
 import { uploadAvatar } from './controllers/userController.js';
 import { createProductType, updateProductType, deleteProductType, getProductType, getProductTypes } from './controllers/productTypeController.js';
 import { createProduct, updateProduct, deleteProduct, getProduct, getProducts } from './controllers/productController.js';
-import { createReview, updateReview, deleteReview, getReview, getReviews, uploadReviewAttachments } from './controllers/reviewController.js';
+import { createReview, updateReview, deleteReview, getReview, getReviews, uploadReviewAttachments, deleteReviewAttachments } from './controllers/reviewController.js';
 import { createComment, updateComment, deleteComment, getComment, getComments } from './controllers/commentController.js';
 import {
     validateRequest, registerValidator, loginValidator, objectIdValidator,
@@ -73,7 +73,8 @@ app.put('/reviews/:id', requireAuth, validateRequest(objectIdValidator, updateRe
 app.delete('/reviews/:id', requireAuth, validateRequest(objectIdValidator), deleteReview);
 app.get('/reviews', getReviews);
 app.get('/reviews/:id', validateRequest(objectIdValidator), getReview);
-app.post('/reviews/:id/attachments', requireAuth, requireAttachments, validateRequest(uploadAttachmentsValidator), uploadReviewAttachments);
+app.post('/reviews/:id/attachments', requireAuth, requireAttachments, validateRequest(objectIdValidator, uploadAttachmentsValidator), uploadReviewAttachments);
+app.delete('/reviews/:id/attachments', requireAuth, validateRequest(objectIdValidator), deleteReviewAttachments);
 
 // comment
 app.post('/comments', requireAuth, validateRequest(createCommentValidator), createComment);

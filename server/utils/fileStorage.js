@@ -23,7 +23,7 @@ export const getFileStorage = (destinationFolder) => {
 export const deleteFile = (filePath) => {
     fs.unlink(filePath, (err) => {
         if (err) {
-            console.error(err);
+            console.log(err.message);
         }
         else {
             console.log(`File ${filePath} has been successfully deleted`);
