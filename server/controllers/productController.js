@@ -1,4 +1,5 @@
 import { Product } from "../models/product.js";
+import { User } from "../models/user.js";
 import { internalServerError, notFoundError } from '../utils/errors.js';
 
 
@@ -48,10 +49,24 @@ export const getProducts = async (req, res) => {
 
 export const getProduct = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id).populate('productType').populate('reviews').populate('submittedBy');
+        const product = await Product.findById(req.params.id).populate('productType').populate('reviews').populate('approvedBy');
         if (!product) {
             return notFoundError(res, 'Product not found');
         }
+        return res.status(200).json(product);
+    } catch (error) {
+        return internalServerError(res, error.message);
+    }
+};
+
+export const approveProduct = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id); 
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return notFoundError(res, 'Product not found');
+        }
+        await product.approve(user);
         return res.status(200).json(product);
     } catch (error) {
         return internalServerError(res, error.message);

@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import { login } from './controllers/authController.js';
 import { changePassword, createUser, deleteUser, getUser, getUsers, updateUser, uploadAvatar } from './controllers/userController.js';
 import { createProductType, updateProductType, deleteProductType, getProductType, getProductTypes } from './controllers/productTypeController.js';
-import { createProduct, updateProduct, deleteProduct, getProduct, getProducts } from './controllers/productController.js';
+import { createProduct, updateProduct, deleteProduct, getProduct, getProducts, approveProduct } from './controllers/productController.js';
 import { createReview, updateReview, deleteReview, getReview, getReviews, uploadReviewAttachments, deleteReviewAttachments } from './controllers/reviewController.js';
 import { createComment, updateComment, deleteComment, getComment, getComments } from './controllers/commentController.js';
 import {
@@ -70,7 +70,7 @@ app.put('/products/:id', requireAuth, validateRequest(objectIdValidator, updateP
 app.delete('/products/:id', requireAuth, validateRequest(objectIdValidator), deleteProduct);
 app.get('/products', getProducts);
 app.get('/products/:id', validateRequest(objectIdValidator), getProduct);
-
+app.post('/products/:id/approve', requireAuth, validateRequest(objectIdValidator), approveProduct);
 
 // review
 app.post('/reviews', requireAuth, validateRequest(createReviewValidator), createReview);

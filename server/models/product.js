@@ -1,6 +1,6 @@
 import { mongoose } from 'mongoose';
 
-import { reviewSchema } from './review.js';
+import { User } from './user.js';
 
 
 export const productSchema = new mongoose.Schema({
@@ -26,9 +26,12 @@ export const productSchema = new mongoose.Schema({
         ref: 'Review',
         default: []
     },
-    submittedBy: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'User',
+    approvedBy: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            unique: true
+        }],
         default: []
     },
     isApproved: {
@@ -37,5 +40,32 @@ export const productSchema = new mongoose.Schema({
         default: false
     }
 });
+
+productSchema.methods.approve = async function (user) {
+    try {
+        const userId = user._id;
+        if (this.approvedBy.includes(userId) || this.isApproved) {
+            return false;
+        }
+        this.approvedBy.push(userId);
+        const isAdmin = user.role === 'admin';
+        if (isAdmin) {
+            this.isApproved = true;
+            await this.save();
+            return true;
+        }
+        const nonAdminApprovals = await User.countDocuments({ _id: { $in: this.approvedBy }, role: { $ne: 'admin' } });
+        if (nonAdminApprovals >= 3) {
+            this.isApproved = true;
+            await this.save();
+            return true;
+        }
+        await this.save();
+        return false;
+    } catch (error) {
+        console.log(error.message);
+        return false;
+    }
+};
 
 export const Product = mongoose.model('Product', productSchema);
