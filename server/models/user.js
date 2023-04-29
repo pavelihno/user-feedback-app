@@ -30,18 +30,17 @@ export const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-userSchema.pre('save', async function (next) {
+userSchema.statics.getUserRoles = () => { return userRoles };
+
+userSchema.methods.setPassword = async function (password) {
     try {
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(this.password, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
         this.password = hashedPassword;
-        next();
     } catch (error) {
-        next(error);
+        throw Error(error.message);
     }
-});
-
-userSchema.statics.getUserRoles = () => { return userRoles };
+};
 
 userSchema.methods.isPasswordCorrect = async function (candidatePassword) {
     try {

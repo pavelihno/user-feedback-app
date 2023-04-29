@@ -34,16 +34,31 @@ export const objectIdValidator = [
         .custom(validateObjectId)
 ];
 
-export const registerValidator = [
+export const loginValidator = [
     body('email')
         .trim()
         .isEmail()
         .withMessage('Invalid email address')
         .normalizeEmail(),
     body('password')
+        .notEmpty()
+        .withMessage('Password is required')
+];
+
+export const changePasswordValidator = [
+    body('password')
         .trim()
         .isLength({ min: 6 })
         .withMessage('Password must be at least 6 characters long'),
+]
+
+export const createUserValidator = [
+    ...changePasswordValidator,
+    body('email')
+        .trim()
+        .isEmail()
+        .withMessage('Invalid email address')
+        .normalizeEmail(),
     body('name')
         .trim()
         .isLength({ min: 3 })
@@ -54,15 +69,11 @@ export const registerValidator = [
         .withMessage('Role does not exist')
 ];
 
-export const loginValidator = [
-    body('email')
+export const updateUserValidator = [
+    body('name')
         .trim()
-        .isEmail()
-        .withMessage('Invalid email address')
-        .normalizeEmail(),
-    body('password')
-        .notEmpty()
-        .withMessage('Password is required')
+        .isLength({ min: 3 })
+        .withMessage('Name must be at least 3 characters long')
 ];
 
 export const uploadAvatarValidator = [
