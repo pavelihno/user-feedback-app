@@ -244,10 +244,7 @@ export const createReviewValidator = [
                 throw new Error('Product not found');
             }
             return true;
-        }),
-    body('rating')
-        .isInt({ min: Review.getMinRating(), max: Review.getMaxRating() })
-        .withMessage(`Rating must be an integer between ${Review.getMinRating()} and ${Review.getMaxRating()}`),
+        })
 ];
 
 export const updateReviewValidator = [
@@ -259,10 +256,7 @@ export const updateReviewValidator = [
     body('text')
         .trim()
         .notEmpty()
-        .withMessage('Text is required'),
-    body('rating')
-        .isInt({ min: Review.getMinRating(), max: Review.getMaxRating() })
-        .withMessage(`Rating must be an integer between ${Review.getMinRating()} and ${Review.getMaxRating()}`),
+        .withMessage('Text is required')
 ];
 
 export const uploadAttachmentsValidator = [
@@ -283,8 +277,6 @@ export const uploadAttachmentsValidator = [
             return true;
         })
 ];
-
-
 
 export const createCommentValidator = [
     body('text')
