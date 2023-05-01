@@ -63,7 +63,6 @@ productSchema.methods.approve = async function (user) {
         await this.save();
         return false;
     } catch (error) {
-        console.log(error.message);
         return false;
     }
 };

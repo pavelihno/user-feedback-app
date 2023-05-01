@@ -1,6 +1,7 @@
 import { User } from '../models/user.js';
 import { notFoundError, internalServerError, accessDeniedError, authError } from '../utils/errors.js';
 import { deleteFile } from '../utils/fileStorage.js';
+import { signJWT } from '../utils/jwt.js';
 
 
 const isInvalidAccess = (req, modifiedUser) => {
@@ -18,7 +19,8 @@ export const createUser = async (req, res) => {
         user = new User({ email, name });
         await user.setPassword(password)
         await user.save();
-        return res.status(200).json(user);
+        const token = signJWT(user._id);
+        return res.status(200).json({ user, token });
     } catch (error) {
         return internalServerError(res, error.message);
     }
