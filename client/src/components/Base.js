@@ -46,7 +46,7 @@ const Base = ({ children }) => {
             </Container>
             <Container component="footer">
                 <Typography variant="body2" align="center">
-                    <Link to="https://t.me/pavelihno">
+                    <Link to="https://t.me/pavelihno" target="_blank">
                         {`Copyright © Opinionator ${new Date().getFullYear()}.`}
                     </Link>
                 </Typography>

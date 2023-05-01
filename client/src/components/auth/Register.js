@@ -37,20 +37,22 @@ const Register = () => {
             setErrors({ confirmPassword: 'Passwords must match' });
             return;
         }
-        const res = await dispatch(register(formData));
-        if (res.error) {
-            if (Array.isArray(res.error)) {
-                setErrors(res.error.reduce((map, { path, msg }) => {
-                    map[path] = msg;
-                    return map;
-                }, {}));
-            } else {
-                setErrors({ message: res.error });
-            }
-            return;
-        } else {
-            navigate('/');
-        }
+        dispatch(register(formData))
+            .unwrap()
+            .then((res) => {
+                return navigate('/');
+            })
+            .catch((res) => {
+                if (Array.isArray(res.error)) {
+                    setErrors(res.error.reduce((map, { path, msg }) => {
+                        map[path] = msg;
+                        return map;
+                    }, {}));
+                } else {
+                    setErrors({ message: res.error });
+                }
+                return;
+            });
     };
 
     return (

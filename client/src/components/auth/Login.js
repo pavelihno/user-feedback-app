@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -15,21 +16,40 @@ import Base from '../Base';
 
 
 const Login = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
 
+    const [errors, setErrors] = useState({});
+
     const { email, password } = formData;
 
-    const onChange = (e) =>
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const onSubmit = (e) => {
+    const onSubmit = async e => {
         e.preventDefault();
-        dispatch(login(formData));
+        setErrors({});
+        dispatch(login(formData))
+            .unwrap()
+            .then((res) => {
+                return navigate('/');
+            })
+            
+            .catch((res) => {
+                console.log(res);
+                if (Array.isArray(res.error)) {
+                    setErrors(res.error.reduce((map, { path, msg }) => {
+                        map[path] = msg;
+                        return map;
+                    }, {}));
+                } else {
+                    setErrors({ message: res.error });
+                }
+                return;
+            });
     };
 
     return (
@@ -51,9 +71,12 @@ const Login = () => {
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
                             label="Email Address"
                             name="email"
+                            value={email}
+                            onChange={onChange}
+                            error={errors.email ? true : false}
+                            helperText={errors.email ? errors.email : ''}
                         />
                         <TextField
                             margin="normal"
@@ -62,12 +85,18 @@ const Login = () => {
                             name="password"
                             label="Password"
                             type="password"
-                            id="password"
+                            value={password}
+                            onChange={onChange}
+                            error={errors.password ? true : false}
+                            helperText={errors.password ? errors.password : ''}
                         />
+                        <Typography variant="caption" color="error">
+                            {errors.message && errors.message}
+                        </Typography>
                         <Button type="submit" fullWidth variant="contained" >
                             Login
                         </Button>
-                        <Box container>
+                        <Box>
                             <Link href="#" variant="body2">
                                 Reset password
                             </Link>

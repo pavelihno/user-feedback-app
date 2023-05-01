@@ -1,10 +1,10 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { api } from '../api';
 import { setAuthToken } from '../api';
 
 
-const getErrorData = (err) => { 
+const getErrorData = (err) => {
     return err.response ? err.response.data : err;
 };
 
@@ -15,38 +15,42 @@ export const setCurrentUserId = (userId) => ({
     userId
 });
 
-export const login = (formData) => async (dispatch) => {
-    try {
-        const res = await api.post('/login', formData);
-        const {token} = res.data;
-        const {_id: userId} = res.data.user;
-
-        localStorage.setItem('token', token);
-
-        setAuthToken(token);
-        dispatch(setCurrentUserId(userId));
-    } catch (err) {
-        return getErrorData(err);
-    }
+const setAuthTokenAndUserId = (dispatch, token, userId) => {
+    localStorage.setItem('jwtToken', token);
+    setAuthToken(token);
+    dispatch(setCurrentUserId(userId));
 };
+
+export const login = createAsyncThunk(
+    'auth/login',
+    async (formData, { dispatch, rejectWithValue }) => {
+        try {
+            const res = await api.post('/login', formData);
+            const { token, user: { _id: userId } } = res.data;
+            setAuthTokenAndUserId(dispatch, token, userId);
+            return res;
+        } catch (err) {
+            return rejectWithValue(getErrorData(err));
+        }
+    }
+);
+
+export const register = createAsyncThunk(
+    'auth/register',
+    async (formData, { dispatch, rejectWithValue }) => {
+        try {
+            const res = await api.post('/register', formData);
+            const { token, user: { _id: userId } } = res.data;
+            setAuthTokenAndUserId(dispatch, token, userId);
+            return res;
+        } catch (err) {
+            return rejectWithValue(getErrorData(err));
+        }
+    }
+);
 
 export const logout = () => (dispatch) => {
     localStorage.removeItem('token');
     setAuthToken(false);
     dispatch(setCurrentUserId(null));
-};
-
-export const register = (formData) => async (dispatch) => {
-    try {
-        const res = await api.post('/register', formData);
-        const {token} = res.data;
-        const {_id: userId} = res.data.user;
-
-        localStorage.setItem('jwtToken', token);
-        setAuthToken(token);
-        dispatch(setCurrentUserId(userId));
-        return res;
-    } catch (err) {
-        return getErrorData(err);
-    }
 };
