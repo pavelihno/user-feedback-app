@@ -1,7 +1,6 @@
 import { signJWT } from '../utils/jwt.js';
 import { authError, internalServerError } from '../utils/errors.js';
 import { User } from '../models/user.js';
-import { createUser } from './userController.js';
 
 
 export const login = async (req, res) => {
@@ -16,7 +15,7 @@ export const login = async (req, res) => {
             return authError(res, 'Invalid email or password');
         }
         const token = signJWT(user._id);
-        return res.status(200).json({ token });
+        return res.status(200).json({ user, token });
     } catch (error) {
         return internalServerError(res, error.message);
     }
