@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -14,21 +15,42 @@ import Base from '../Base';
 
 
 const Register = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
-        password2: ''
+        confirmPassword: ''
     });
 
-    const { name, email, password, password2 } = formData;
+    const [errors, setErrors] = useState({});
+
+    const { name, email, password, confirmPassword } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
-        dispatch(register({ name, email, password }));
+        setErrors({});
+        if (password !== confirmPassword) {
+            setErrors({ confirmPassword: 'Passwords must match' });
+            return;
+        }
+        const res = await dispatch(register(formData));
+        if (res.error) {
+            if (Array.isArray(res.error)) {
+                setErrors(res.error.reduce((map, { path, msg }) => {
+                    map[path] = msg;
+                    return map;
+                }, {}));
+            } else {
+                setErrors({ message: res.error });
+            }
+            return;
+        } else {
+            navigate('/');
+        }
     };
 
     return (
@@ -50,9 +72,23 @@ const Register = () => {
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
+                            label="Profile name"
+                            name="name"
+                            value={name}
+                            onChange={onChange}
+                            error={errors.name ? true : false}
+                            helperText={errors.name ? errors.name : ''}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
                             label="Email Address"
                             name="email"
+                            value={email}
+                            onChange={onChange}
+                            error={errors.email ? true : false}
+                            helperText={errors.email ? errors.email : ''}
                         />
                         <TextField
                             margin="normal"
@@ -61,7 +97,10 @@ const Register = () => {
                             name="password"
                             label="Password"
                             type="password"
-                            id="password"
+                            value={password}
+                            onChange={onChange}
+                            error={errors.password ? true : false}
+                            helperText={errors.password ? errors.password : ''}
                         />
                         <TextField
                             margin="normal"
@@ -71,7 +110,14 @@ const Register = () => {
                             label="Confirm Password"
                             type="password"
                             id="confirmPassword"
+                            value={confirmPassword}
+                            onChange={onChange}
+                            error={errors.confirmPassword ? true : false}
+                            helperText={errors.confirmPassword ? errors.confirmPassword : ''}
                         />
+                        <Typography variant="caption" color="error">
+                            {errors.message && errors.message}
+                        </Typography>
                         <Button type="submit" fullWidth variant="contained" >
                             Register
                         </Button>
@@ -79,7 +125,6 @@ const Register = () => {
                 </Box>
             </Container>
         </Base>
-
     );
 };
 

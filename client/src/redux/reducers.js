@@ -1,15 +1,11 @@
 import { combineReducers } from 'redux';
-import { SET_CURRENT_USER } from './actions';
+import { SET_CURRENT_USER_ID } from './actions';
 
 
-const initialState = {
-    currentUser: null,
-};
-
-const currentUserReducer = (state = initialState.currentUser, action) => {
+const currentUserReducer = (state = null, action) => {
     switch (action.type) {
-        case SET_CURRENT_USER:
-            return action.user;
+        case SET_CURRENT_USER_ID:
+            return action.userId;
         default:
             return state;
     }
