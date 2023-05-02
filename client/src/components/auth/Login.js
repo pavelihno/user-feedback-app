@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -7,11 +7,11 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LoginIcon from '@mui/icons-material/Login';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 
-import { login } from '../../redux/actions';
+import { login } from '../../redux/actions/auth';
 import Base from '../Base';
 
 
@@ -37,9 +37,7 @@ const Login = () => {
             .then((res) => {
                 return navigate('/');
             })
-            
             .catch((res) => {
-                console.log(res);
                 if (Array.isArray(res.error)) {
                     setErrors(res.error.reduce((map, { path, msg }) => {
                         map[path] = msg;
@@ -63,7 +61,7 @@ const Login = () => {
                     alignItems: 'center',
                 }}>
                     <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                        <LockOutlinedIcon />
+                        <LoginIcon />
                     </Avatar>
                     <Typography variant="h5">Sign in</Typography>
                     <Box component="form" onSubmit={onSubmit}>

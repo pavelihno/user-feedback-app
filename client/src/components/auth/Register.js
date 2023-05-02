@@ -7,10 +7,10 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import CreateIcon from '@mui/icons-material/Create';
 import Typography from '@mui/material/Typography';
 
-import { register } from '../../redux/actions';
+import { register } from '../../redux/actions/auth';
 import Base from '../Base';
 
 
@@ -66,7 +66,7 @@ const Register = () => {
                     alignItems: 'center',
                 }}>
                     <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                        <LockOutlinedIcon />
+                        <CreateIcon />
                     </Avatar>
                     <Typography variant="h5">Sign up</Typography>
                     <Box component="form" onSubmit={onSubmit}>
