@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -12,10 +12,10 @@ import Typography from '@mui/material/Typography';
 
 import { register } from '../../redux/actions/auth';
 import Base from '../Base';
+import { selectIsAuth } from '../../redux/reducers/auth';
 
 
 const Register = () => {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         name: '',
@@ -40,7 +40,7 @@ const Register = () => {
         dispatch(register(formData))
             .unwrap()
             .then((res) => {
-                return navigate('/');
+                return <Navigate to="/" />;
             })
             .catch((res) => {
                 if (Array.isArray(res.error)) {
@@ -54,6 +54,12 @@ const Register = () => {
                 return;
             });
     };
+
+    const isAuth = useSelector(selectIsAuth)
+
+    if (isAuth) {
+        return <Navigate to="/" />;
+    }
 
     return (
         <Base>

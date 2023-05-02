@@ -20,3 +20,12 @@ export const login = async (req, res) => {
         return internalServerError(res, error.message);
     }
 };
+
+export const auth = async (req, res) => {
+    try {
+        const { user } = req;
+        return res.status(200).json({ user });
+    } catch (error) {
+        return authError(res, 'Invalid token');
+    }
+};

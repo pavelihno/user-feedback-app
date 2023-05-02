@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -13,10 +13,10 @@ import Link from '@mui/material/Link';
 
 import { login } from '../../redux/actions/auth';
 import Base from '../Base';
+import { selectIsAuth } from '../../redux/reducers/auth';
 
 
 const Login = () => {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         email: '',
@@ -35,7 +35,7 @@ const Login = () => {
         dispatch(login(formData))
             .unwrap()
             .then((res) => {
-                return navigate('/');
+                return <Navigate to="/" />;
             })
             .catch((res) => {
                 if (Array.isArray(res.error)) {
@@ -49,6 +49,12 @@ const Login = () => {
                 return;
             });
     };
+
+    const isAuth = useSelector(selectIsAuth)
+
+    if (isAuth) {
+        return <Navigate to="/" />;
+    }
 
     return (
         <Base>

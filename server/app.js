@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
-import { login } from './controllers/authController.js';
+import { login, auth } from './controllers/authController.js';
 import { changePassword, createUser, deleteUser, getUser, getUsers, updateUser, uploadAvatar } from './controllers/userController.js';
 import { createProductType, updateProductType, deleteProductType, getProductType, getProductTypes } from './controllers/productTypeController.js';
 import { createProduct, updateProduct, deleteProduct, getProduct, getProducts, approveProduct } from './controllers/productController.js';
@@ -49,6 +49,7 @@ app.get('/', requireAuth, (req, res) => {
 // auth
 app.post('/register', validateRequest(createUserValidator), createUser);
 app.post('/login', validateRequest(loginValidator), login);
+app.get('/auth', requireAuth, auth);
 
 // user
 app.post('/users', requireAdmin, validateRequest(createUserValidator), createUser);

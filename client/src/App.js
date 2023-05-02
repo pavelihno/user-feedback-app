@@ -1,6 +1,6 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Routes, Route } from 'react-router-dom';
 
 import store from './redux/store';
 import Home from './components/Home';
@@ -24,18 +24,22 @@ import AttachmentUploader from './components/review/AttachmentUploader';
 import CommentList from './components/comment/CommentList';
 import CommentDetail from './components/comment/CommentDetail';
 import CommentForm from './components/comment/CommentForm';
+import { selectIsAuth } from './redux/reducers/auth';
+import { auth } from './redux/actions/auth';
 
 
 function App() {
-  return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+  const dispatch = useDispatch();
 
-          {/* <Route path="/users" element={<UserList />} />
+  React.useEffect(() => { dispatch(auth()) }, []);
+
+  return (
+    <Routes>
+      <Route path="/" element={<Home />}></Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* <Route path="/users" element={<UserList />} />
           <Route path="/users/new" element={<UserForm />} />
           <Route path="/users/:id" element={<UserDetail />} />
           <Route path="/users/:id/edit" element={<UserForm />} />
@@ -62,11 +66,7 @@ function App() {
           <Route path="/comments/new" element={<CommentForm />} />
           <Route path="/comments/:id" element={<CommentDetail />} />
           <Route path="/comments/:id/edit" element={<CommentForm />} /> */}
-
-        </Routes>
-      </BrowserRouter>
-    </Provider>
-
+    </Routes>
   );
 }
 

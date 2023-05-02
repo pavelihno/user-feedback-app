@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,9 +11,23 @@ import IconButton from '@mui/material/IconButton';
 import { ThemeProvider } from '@mui/material/styles';
 
 import theme from '../theme';
+import { selectCurrentUser, selectIsAuth } from '../redux/reducers/auth';
+import { logout } from '../redux/actions/auth';
 
 
 const Base = ({ children }) => {
+    const dispatch = useDispatch();
+    const currentUser = useSelector(selectCurrentUser);
+
+    const isAuth = useSelector(selectIsAuth);
+    const isAdmin = isAuth && currentUser.role == 'admin';
+
+    const onClickLogout = () => {
+        if (window.confirm('Sure you want to logout?')) {
+            dispatch(logout);
+        }
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <AppBar position="static">

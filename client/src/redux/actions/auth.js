@@ -36,3 +36,12 @@ export const register = createAsyncThunk(
 );
 
 export const logout = createAsyncThunk('auth/logout', () => { setAuthToken(false); });
+
+export const auth = createAsyncThunk(
+    'auth',
+    async () => {
+        const res = await api.get('/auth');
+        const { user } = res.data;
+        return user;
+    }
+);
