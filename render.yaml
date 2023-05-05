@@ -1,13 +1,13 @@
 services:
   - type: web
     name: user-feedback-app-server
-    env: docker
-    dockerfilePath: ./server/Dockerfile
     repo: https://github.com/pavelihno/user-feedback-app.git
+    branch: cloud-deployment
     region: frankfurt
     plan: free
-    branch: cloud-deployment
+    env: docker
     rootDir: server
+    dockerfilePath: ./Dockerfile
     numInstances: 1
     healthCheckPath: /
     envVars:

@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE $EXPRESS_DOCKER_PORT
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
