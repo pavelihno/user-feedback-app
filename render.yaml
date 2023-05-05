@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: user-feedback-app-server
+    env: docker
+    dockerfilePath: ./server/Dockerfile
+    repo: https://github.com/pavelihno/user-feedback-app.git
+    region: frankfurt
+    plan: free
+    branch: cloud-deployment
+    rootDir: server
+    numInstances: 1
+    healthCheckPath: /
+    envVars:
+      - key: REACT_APP
+        value: true
+      - key: NODE_ENV
+        value: development
+      - key: EXPRESS_DOCKER_PORT
+        value: 8080
+      - key: EXPRESS_LOCAL_PORT
+        value: 8080
+      - key: MONGODB_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRATION_PERIOD
+        value: 1d

@@ -21,7 +21,7 @@ import { requireAdmin, requireAuth } from './utils/middlewares/authMiddleware.js
 
 
 const connectDB = async () => {
-    const MONGO_URI = `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_USER_PASSWORD}@mongo:${process.env.MONGODB_DOCKER_PORT}/${process.env.MONGODB_DATABASE}`;
+    const MONGO_URI = `${process.env.MONGODB_URL}`;
 
     await mongoose
         .connect(MONGO_URI, {
