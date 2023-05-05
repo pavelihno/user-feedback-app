@@ -4,10 +4,14 @@ import { User } from '../../models/user.js';
 
 
 const getUser = async (req) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = verifyJWT(token);
-    const user = await User.findById(decodedToken.userId);
-    return user;
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = verifyJWT(token);
+        const user = await User.findById(decodedToken.userId);
+        return user;
+    }  catch (error) {
+        return null;
+    }
 };
 
 
