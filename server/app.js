@@ -41,8 +41,8 @@ app.use(cors());
 
 connectDB();
 
-app.get('/', requireAuth, (req, res) => {
-    res.send('Home Route');
+app.get('/', async (req, res) => {
+    return res.status(200).json({ success: true });
 });
 
 
