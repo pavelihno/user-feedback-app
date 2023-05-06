@@ -64,8 +64,8 @@ app.post('/users/uploadAvatar', requireAuth, requireAvatar, validateRequest(uplo
 app.post('/productTypes', requireAdmin, validateRequest(createProductTypeValidator), createProductType);
 app.put('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator, updateProductTypeValidator), updateProductType);
 app.delete('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator), deleteProductType);
-app.get('/productTypes', requireAuth, getProductTypes);
-app.get('/productTypes/:id', requireAuth, validateRequest(objectIdValidator), getProductType);
+app.get('/productTypes', getProductTypes);
+app.get('/productTypes/:id', validateRequest(objectIdValidator), getProductType);
 
 // product
 app.post('/products', requireAuth, validateRequest(createProductValidator), createProduct);
