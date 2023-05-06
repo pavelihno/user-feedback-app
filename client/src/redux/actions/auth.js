@@ -1,11 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { api, setAuthToken } from '../../api';
+import { getErrorData } from './utils';
 
-
-const getErrorData = (err) => {
-    return err.response ? err.response.data : err;
-};
 
 export const login = createAsyncThunk(
     'auth/login',

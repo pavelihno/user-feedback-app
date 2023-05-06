@@ -21,6 +21,6 @@ export const setAuthToken = (token) => {
     if (token) {
         window.localStorage.setItem('token', token);
     } else {
-        window.localStorage.removeItem(token);
+        window.localStorage.removeItem('token');
     }
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 
@@ -31,7 +31,7 @@ import { auth } from './redux/actions/auth';
 function App() {
   const dispatch = useDispatch();
 
-  React.useEffect(() => { dispatch(auth()) }, []);
+  useEffect(() => { dispatch(auth()) }, []);
 
   return (
     <Routes>
@@ -40,32 +40,32 @@ function App() {
       <Route path="/register" element={<Register />} />
 
       {/* <Route path="/users" element={<UserList />} />
-          <Route path="/users/new" element={<UserForm />} />
-          <Route path="/users/:id" element={<UserDetail />} />
-          <Route path="/users/:id/edit" element={<UserForm />} />
-          <Route path="/users/:id/change-password" element={<ChangePasswordForm />} />
-          <Route path="/users/:id/upload-avatar" element={<AvatarUploader />} />
+      <Route path="/users/new" element={<UserForm />} /> */}
+      <Route path="/users/:id" element={<UserDetail />} />
+      {/* <Route path="/users/:id/edit" element={<UserForm />} />
+      <Route path="/users/:id/change-password" element={<ChangePasswordForm />} />
+      <Route path="/users/:id/upload-avatar" element={<AvatarUploader />} />
 
-          <Route path="/product-types" element={<ProductTypeList />} />
-          <Route path="/product-types/new" element={<ProductTypeForm />} />
-          <Route path="/product-types/:id" element={<ProductTypeDetail />} />
-          <Route path="/product-types/:id/edit" element={<ProductTypeForm />} />
+      <Route path="/product-types" element={<ProductTypeList />} />
+      <Route path="/product-types/new" element={<ProductTypeForm />} />
+      <Route path="/product-types/:id" element={<ProductTypeDetail />} />
+      <Route path="/product-types/:id/edit" element={<ProductTypeForm />} />
 
-          <Route path="/products" element={<ProductList />} />
-          <Route path="/products/new" element={<ProductForm />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
-          <Route path="/products/:id/edit" element={<ProductForm />} />
+      <Route path="/products" element={<ProductList />} />
+      <Route path="/products/new" element={<ProductForm />} />
+      <Route path="/products/:id" element={<ProductDetail />} />
+      <Route path="/products/:id/edit" element={<ProductForm />} />
 
-          <Route path="/reviews" element={<ReviewList />} />
-          <Route path="/reviews/new" element={<ReviewForm />} />
-          <Route path="/reviews/:id" element={<ReviewDetail />} />
-          <Route path="/reviews/:id/edit" element={<ReviewForm />} />
-          <Route path="/reviews/:id/attachments" element={<AttachmentUploader />} />
+      <Route path="/reviews" element={<ReviewList />} />
+      <Route path="/reviews/new" element={<ReviewForm />} />
+      <Route path="/reviews/:id" element={<ReviewDetail />} />
+      <Route path="/reviews/:id/edit" element={<ReviewForm />} />
+      <Route path="/reviews/:id/attachments" element={<AttachmentUploader />} />
 
-          <Route path="/comments" element={<CommentList />} />
-          <Route path="/comments/new" element={<CommentForm />} />
-          <Route path="/comments/:id" element={<CommentDetail />} />
-          <Route path="/comments/:id/edit" element={<CommentForm />} /> */}
+      <Route path="/comments" element={<CommentList />} />
+      <Route path="/comments/new" element={<CommentForm />} />
+      <Route path="/comments/:id" element={<CommentDetail />} />
+      <Route path="/comments/:id/edit" element={<CommentForm />} /> */}
     </Routes>
   );
 }
