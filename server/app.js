@@ -29,7 +29,7 @@ const connectDB = async () => {
             useUnifiedTopology: true,
         })
         .then(() => console.log("Successfully connected to DB"))
-        .catch((e) => {
+        .catch(e => {
             console.log(`Error while connecting to DB: ${e.message}`);
         });
 };
@@ -38,6 +38,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use('/storage', express.static('storage'));
 
 connectDB();
 

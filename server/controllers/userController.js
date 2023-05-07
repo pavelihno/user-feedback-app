@@ -19,7 +19,7 @@ export const createUser = async (req, res) => {
         user = new User({ email, name });
         await user.setPassword(password)
         await user.save();
-        const token = signJWT(user._id);
+        const token = signJWT(user._id, user.password);
         return res.status(200).json({ user, token });
     } catch (error) {
         return internalServerError(res, error.message);
@@ -99,15 +99,16 @@ export const changePassword = async (req, res) => {
 export const uploadAvatar = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
+        const avatarPath = req.file.path;
         if (!user) {
             return notFoundError(res, 'User not found');
         }
         if (user.avatarPath) {
             deleteFile(user.avatarPath);
         }
-        user.avatarPath = req.file.path;
+        user.avatarPath = avatarPath;
         await user.save();
-        return res.status(200).json({ message: 'Avatar uploaded successfully' });
+        return res.status(200).json({ message: 'Avatar uploaded successfully', avatarPath });
     } catch (error) {
         return internalServerError(res, error.message);
     }
