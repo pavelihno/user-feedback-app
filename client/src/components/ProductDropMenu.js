@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 
 import { fetchProductTypes } from '../redux/actions/productType';
+import { fullWidthStyle } from '../redux/utils';
 
 
 const ProductDropMenu = () => {
@@ -42,7 +43,7 @@ const ProductDropMenu = () => {
                 <MenuList dense={true} style={{ minWidth: '7rem' }}>
                     {isLoading ? (
                         <MenuItem>
-                            <Skeleton animation='wave' style={{ width: '100%' }} />
+                            <Skeleton animation='wave' style={fullWidthStyle} />
                         </MenuItem>
                     ) : (
                         productTypes.map((type) => (

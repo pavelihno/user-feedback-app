@@ -92,5 +92,6 @@ const authSlice = createSlice({
 
 export const { setCurrentUser, setErrors } = authSlice.actions;
 export const selectIsAuth = state => !!state.auth.currentUser;
+export const selectIsAdmin = state => !!state.auth.currentUser && state.auth.currentUser.role == 'admin';
 
 export default authSlice.reducer;

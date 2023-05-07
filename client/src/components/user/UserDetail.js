@@ -14,9 +14,9 @@ import Container from '@mui/material/Container';
 import Base from '../Base';
 import { baseUrl } from '../../api';
 import { changeName, changePassword, uploadAvatar } from '../../redux/actions/user';
-import { displayErrors } from '../../redux/utils';
+import { displayErrors, fullWidthStyle } from '../../redux/utils';
 
-const fullWidthStyle = { width: '100%' };
+
 const avatarStyle = { width: '8rem', height: '8rem', border: '0.1px solid lightgray' };
 
 const UserDetail = () => {

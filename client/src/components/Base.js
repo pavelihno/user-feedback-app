@@ -14,19 +14,21 @@ import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { ThemeProvider } from '@mui/material/styles';
 
 import theme from '../theme';
-import { selectIsAuth } from '../redux/reducers/auth';
+import { selectIsAuth, selectIsAdmin } from '../redux/reducers/auth';
 import { logout } from '../redux/actions/auth';
 import SearchBar from './SearchBar';
 import ProductDropMenu from './ProductDropMenu';
+import AdministrationDropMenu from './AdministrationDropMenu';
 
 
 const Base = ({ children }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const currentUser = useSelector(state => state.auth.currentUser);
 
+    const currentUser = useSelector(state => state.auth.currentUser);
     const isAuth = useSelector(selectIsAuth);
-    const isAdmin = isAuth && currentUser.role == 'admin';
+    const isAdmin = useSelector(selectIsAdmin);
+
 
     const onClickLogout = async () => {
         if (window.confirm('Are you sure you want to log out?')) {
@@ -58,7 +60,9 @@ const Base = ({ children }) => {
                                     isAuth && (<Grid item><Button component={Link} color="inherit">My reviews</Button></Grid>)
                                 }
                                 {
-                                    isAdmin && (<Grid item><Button component={Link} color="inherit">Administration</Button></Grid>)
+                                    isAdmin && (
+                                        <Grid item><AdministrationDropMenu /></Grid>
+                                    )
                                 }
                             </Grid>
                         </Grid>

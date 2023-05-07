@@ -39,19 +39,16 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* <Route path="/users" element={<UserList />} />
-      <Route path="/users/new" element={<UserForm />} /> */}
       <Route path="/users/:id" element={<UserDetail />} />
-      {/* <Route path="/users/:id/edit" element={<UserForm />} />
-      <Route path="/users/:id/change-password" element={<ChangePasswordForm />} />
-      <Route path="/users/:id/upload-avatar" element={<AvatarUploader />} />
+      {/* <Route path="/users" element={<UserList />} />
+      <Route path="/users/new" element={<UserForm />} />
+      <Route path="/users/:id/resetPassword" element={<ChangePasswordForm />} /> */}
 
-      <Route path="/product-types" element={<ProductTypeList />} />
-      <Route path="/product-types/new" element={<ProductTypeForm />} />
-      <Route path="/product-types/:id" element={<ProductTypeDetail />} />
-      <Route path="/product-types/:id/edit" element={<ProductTypeForm />} />
+      <Route path="/productTypes" element={<ProductTypeList />} />
+      {/* <Route path="/productTypes/:id" element={<ProductTypeDetail />} /> */}
+      <Route path="/productTypes/new" element={<ProductTypeForm />} />
 
-      <Route path="/products" element={<ProductList />} />
+      {/* <Route path="/products" element={<ProductList />} />
       <Route path="/products/new" element={<ProductForm />} />
       <Route path="/products/:id" element={<ProductDetail />} />
       <Route path="/products/:id/edit" element={<ProductForm />} />

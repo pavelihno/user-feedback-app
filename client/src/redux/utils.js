@@ -13,3 +13,5 @@ export const displayErrors = async (res, setErrors) => {
     }
     return;
 };
+
+export const fullWidthStyle = { width: '100%' };
