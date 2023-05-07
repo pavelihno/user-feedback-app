@@ -23,7 +23,7 @@ const SearchBar = () => {
                 name="search"
                 label={focused || searchLine ? '' : 'Search'}
                 value={searchLine}
-                onChange={(e) => setsearchLine(e.target.value)}
+                onChange={e => setsearchLine(e.target.value)}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
                 sx={{ width: '20rem', mt: '1rem', color: 'primary.main', backgroundColor: 'secondary.main', borderRadius: '0.5rem', overflow: 'hidden'}}

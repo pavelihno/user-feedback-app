@@ -22,7 +22,7 @@ const ProductDropMenu = () => {
 
     useEffect(() => { dispatch(fetchProductTypes()) }, [dispatch]);
 
-    const onClick = (e) => {
+    const onClick = e => {
         setAnchor(e.currentTarget);
     };
 
@@ -37,12 +37,12 @@ const ProductDropMenu = () => {
                 anchorEl={anchor}
                 open={!!anchor}
                 onClose={onClose}
-                dense
+                dense="true"
             >
-                <MenuList dense>
+                <MenuList dense={true} style={{ minWidth: '7rem' }}>
                     {isLoading ? (
                         <MenuItem>
-                            <Skeleton animation='wave' width={100} />
+                            <Skeleton animation='wave' style={{ width: '100%' }} />
                         </MenuItem>
                     ) : (
                         productTypes.map((type) => (
@@ -51,6 +51,9 @@ const ProductDropMenu = () => {
                             </ListItemButton>
                         ))
                     )}
+                    <ListItemButton key='More' onClick={onClose} component={Link} to={`/productTypes`}>
+                        <ListItemText primary={'More'} />
+                    </ListItemButton>
                 </MenuList>
             </Menu>
         </Container>
