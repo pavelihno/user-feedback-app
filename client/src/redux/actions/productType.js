@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { api } from '../../api';
-import { getErrorData } from './utils';
+import { getErrorData } from '../utils';
 
 
 export const fetchProductTypes = createAsyncThunk(

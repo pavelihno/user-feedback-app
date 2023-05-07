@@ -11,9 +11,10 @@ import LoginIcon from '@mui/icons-material/Login';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 
-import { login } from '../../redux/actions/auth';
 import Base from '../Base';
+import { login } from '../../redux/actions/auth';
 import { selectIsAuth } from '../../redux/reducers/auth';
+import { displayErrors } from '../../redux/utils';
 
 
 const Login = () => {
@@ -37,17 +38,7 @@ const Login = () => {
             .then((res) => {
                 return <Navigate to="/" />;
             })
-            .catch((res) => {
-                if (Array.isArray(res.error)) {
-                    setErrors(res.error.reduce((map, { path, msg }) => {
-                        map[path] = msg;
-                        return map;
-                    }, {}));
-                } else {
-                    setErrors({ message: res.error });
-                }
-                return;
-            });
+            .catch(res => displayErrors(res, setErrors));
     };
 
     const isAuth = useSelector(selectIsAuth)

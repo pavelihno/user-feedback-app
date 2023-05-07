@@ -3,13 +3,15 @@ import thunk from 'redux-thunk';
 
 import authReducer from './reducers/auth';
 import productTypeReducer from './reducers/productType';
+import uploadReducer from './reducers/upload';
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const middleware = [thunk];
 const rootReducer = combineReducers({
     auth: authReducer,
-    productType: productTypeReducer
+    productType: productTypeReducer,
+    upload: uploadReducer
 });
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(...middleware)));
