@@ -53,7 +53,7 @@ const ProductDropMenu = () => {
                         ))
                     )}
                     <ListItemButton key='More' onClick={onClose} component={Link} to={`/productTypes`}>
-                        <ListItemText primary={'More'} />
+                        <ListItemText primary={'More'} style={{ textDecoration: 'underline' }} />
                     </ListItemButton>
                 </MenuList>
             </Menu>

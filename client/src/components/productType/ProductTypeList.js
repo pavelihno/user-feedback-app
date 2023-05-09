@@ -24,12 +24,12 @@ const ProductTypeList = () => {
 
     return (
         <Base>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="md">
                 <CssBaseline />
                 <Paper elevation={2} style={{ padding: '1rem' }}>
-                    <Grid container>
+                    <Grid container justifyContent="center">
                         <Grid item>
-                            <Typography component="h1" variant="h5" align="center" sx={{ textDecoration: 'underline', mb: '1rem' }}>
+                            <Typography component="h1" variant="h5" sx={{ textDecoration: 'underline', mb: '1rem' }}>
                                 Product categories
                             </Typography>
                         </Grid>
@@ -39,12 +39,11 @@ const ProductTypeList = () => {
                             </IconButton>
                         </Grid>
                     </Grid>
-                    <Grid container sx={{ marginTop: '1.5rem' }}>
+                    <Grid container sx={{ marginTop: '1.5rem' }} spacing={5}>
                         {productTypes.map((productType, index) => (
                             <ProductTypeListItem
                                 key={productType._id}
                                 productType={productType}
-                                onClick={(event) => handleListItemClick(event, index)}
                             />
                         ))}
                     </Grid>
