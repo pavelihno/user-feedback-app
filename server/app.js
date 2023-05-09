@@ -18,6 +18,7 @@ import {
 } from './utils/validators.js';
 import { requireAvatar, requireAttachments } from './utils/middlewares/uploadMiddleware.js';
 import { requireAdmin, requireAuth } from './utils/middlewares/authMiddleware.js';
+import { getAttributeTypes } from './controllers/attributeController.js';
 
 
 const connectDB = async () => {
@@ -67,6 +68,9 @@ app.put('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator, up
 app.delete('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator), deleteProductType);
 app.get('/productTypes', getProductTypes);
 app.get('/productTypes/:id', validateRequest(objectIdValidator), getProductType);
+
+// attribute
+app.get('/attributes/types', requireAdmin, getAttributeTypes);
 
 // product
 app.post('/products', requireAuth, validateRequest(createProductValidator), createProduct);
