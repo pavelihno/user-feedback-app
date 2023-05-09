@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 
 import authReducer from './reducers/auth';
 import productTypeReducer from './reducers/productType';
+import attributeReducer from './reducers/attribute';
 import uploadReducer from './reducers/upload';
 
 
@@ -11,6 +12,7 @@ const middleware = [thunk];
 const rootReducer = combineReducers({
     auth: authReducer,
     productType: productTypeReducer,
+    attribute: attributeReducer,
     upload: uploadReducer
 });
 
