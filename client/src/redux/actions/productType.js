@@ -30,7 +30,6 @@ export const deleteProductType = createAsyncThunk(
     'productTypes/delete',
     async (productTypeId, { rejectWithValue }) => {
         try {
-            console.log(id);
             const res = await api.delete(`/productTypes/${productTypeId}`);
             const message = res.message;
             return message;
@@ -57,7 +56,6 @@ export const updateProductType = createAsyncThunk(
     'productTypes/update',
     async (formData, { rejectWithValue }) => {
         try {
-            console.log(123);
             const res = await api.put(`/productTypes/${formData.productTypeId}`, formData);
             const productType = res.data;
             return productType;
