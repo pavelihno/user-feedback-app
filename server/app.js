@@ -76,7 +76,7 @@ app.get('/attributes/types', requireAdmin, getAttributeTypes);
 app.post('/products', requireAuth, validateRequest(createProductValidator), createProduct);
 app.put('/products/:id', requireAuth, validateRequest(objectIdValidator, updateProductValidator), updateProduct);
 app.delete('/products/:id', requireAuth, validateRequest(objectIdValidator), deleteProduct);
-app.get('/products', getProducts);
+app.get('/products/:id/list', validateRequest(objectIdValidator), getProducts);
 app.get('/products/:id', validateRequest(objectIdValidator), getProduct);
 app.post('/products/:id/approve', requireAuth, validateRequest(objectIdValidator), approveProduct);
 
