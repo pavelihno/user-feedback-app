@@ -7,12 +7,9 @@ import Home from './components/Home';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import UserList from './components/user/UserList';
-import UserDetail from './components/user/UserDetail';
-import UserForm from './components/user/UserForm';
+import UpdateUserForm from './components/user/UpdateUserForm';
 import ChangePasswordForm from './components/user/ChangePasswordForm';
-import AvatarUploader from './components/user/AvatarUploader';
 import ProductTypeList from './components/productType/ProductTypeList';
-import ProductTypeDetail from './components/productType/ProductTypeDetail';
 import ProductTypeForm from './components/productType/ProductTypeForm';
 import ProductList from './components/product/ProductList';
 import ProductDetail from './components/product/ProductDetail';
@@ -26,6 +23,8 @@ import CommentDetail from './components/comment/CommentDetail';
 import CommentForm from './components/comment/CommentForm';
 import { selectIsAuth } from './redux/reducers/auth';
 import { auth } from './redux/actions/auth';
+import CreateProductTypeForm from './components/productType/CreateProductTypeForm';
+import UpdateProductTypeForm from './components/productType/UpdateProductTypeForm';
 
 
 function App() {
@@ -39,14 +38,14 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      <Route path="/users/:id" element={<UserDetail />} />
+      <Route path="/users/:id" element={<UpdateUserForm />} />
       {/* <Route path="/users" element={<UserList />} />
       <Route path="/users/new" element={<UserForm />} />
       <Route path="/users/:id/resetPassword" element={<ChangePasswordForm />} /> */}
 
       <Route path="/productTypes" element={<ProductTypeList />} />
-      {/* <Route path="/productTypes/:id" element={<ProductTypeDetail />} /> */}
-      <Route path="/productTypes/new" element={<ProductTypeForm />} />
+      <Route path="/productTypes/:id" element={<UpdateProductTypeForm />} />
+      <Route path="/productTypes/new" element={<CreateProductTypeForm />} />
 
       {/* <Route path="/products" element={<ProductList />} />
       <Route path="/products/new" element={<ProductForm />} />
