@@ -65,12 +65,16 @@ const ProductTypeListItem = ({ productType }) => {
                     </Fragment>}
                 />
                 <CardActions disableSpacing>
-                    <IconButton component={Link} to={`/products/new`}>
-                        <Tooltip title="Create new product">
-                            <AddIcon />
-                        </Tooltip>
-                    </IconButton>
-                    <IconButton component={Link} to={'/'}>
+                    {
+                        isAuth && (
+                            <IconButton component={Link} to={`/products/${productType._id}/new`}>
+                                <Tooltip title="Create new product">
+                                    <AddIcon />
+                                </Tooltip>
+                            </IconButton>
+                        )
+                    }
+                    <IconButton component={Link} to={`/products/${productType._id}/list`}>
                         <Tooltip title="List category products">
                             <ListIcon />
                         </Tooltip>

@@ -47,7 +47,7 @@ const ProductDropMenu = () => {
                         </MenuItem>
                     ) : (
                         productTypes.map((type) => (
-                            <ListItemButton key={type._id} onClick={onClose} component={Link} to={`/productTypes/${type._id}`}>
+                            <ListItemButton key={type._id} onClick={onClose} component={Link} to={`/products/${type._id}/list`}>
                                 <ListItemText primary={type.name} />
                             </ListItemButton>
                         ))
