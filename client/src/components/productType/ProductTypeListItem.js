@@ -56,7 +56,7 @@ const ProductTypeListItem = ({ productType }) => {
                                         <TableRow key={index}>
                                             <TableCell>{attribute.name}</TableCell>
                                             <TableCell>{attribute.type}</TableCell>
-                                            {attribute.type === 'enum' && (<TableCell>{attribute.options}</TableCell>)}
+                                            {attribute.type === 'enum' && (<TableCell>{attribute.options.join('/')}</TableCell>)}
                                         </TableRow>
                                     ))}
                                 </TableBody>

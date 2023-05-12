@@ -145,53 +145,55 @@ const validateProductAttributes = async (attributes, { req }) => {
     if (!productType) {
         throw new Error('Invalid product type');
     }
-    const allowedAttributes = productType.attributes.map((attr) => attr.key);
+    const allowedAttributes = productType.attributes.map((attribute) => attribute.key);
     const receivedAttributes = Object.keys(attributes);
-    const isValid = receivedAttributes.every((attr) => allowedAttributes.includes(attr));
+    const isValid = receivedAttributes.every((attributeKey) => allowedAttributes.includes(attributeKey));
     if (!isValid) {
         throw new Error('Invalid attributes product type');
     }
-    for (const [attr, value] of Object.entries(attributes)) {
-        const attributeType = productType.attributes.find((a) => a.key === attr)?.type;
+    for (const [attributeKey, value] of Object.entries(attributes)) {
+        const attribute = productType.attributes.find((a) => a.key === attributeKey);
+        const attributeType = attribute?.type;
+        const attributeName = attribute?.name;
         if (!attributeType) {
-            throw new Error(`Invalid attribute type for ${attr}`);
+            throw new Error(`Invalid attribute type for ${attributeName}`);
         }
         const allowedTypes = Attribute.getAttributeTypes();
         if (!allowedTypes.includes(attributeType)) {
-            throw new Error(`Invalid attribute type for ${attr}`);
+            throw new Error(`Invalid attribute type for ${attributeName}`);
         }
         if (attributeType === 'enum') {
-            const options = productType.attributes.find((a) => a.key === attr)?.options;
+            const options = productType.attributes.find((a) => a.key === attributeKey)?.options;
             if (!options || !options.includes(value)) {
-                throw new Error(`Invalid value for ${attr}`);
+                throw new Error(`Invalid value for ${attributeName}`);
             }
         } else if (attributeType === 'list') {
             if (!Array.isArray(value)) {
-                throw new Error(`Invalid value for ${attr}`);
+                throw new Error(`Invalid value for "${attributeName}"`);
             }
         } else if (attributeType === 'text') {
             if (typeof value !== 'string') {
-                throw new Error(`Attribute "${attr}" must be of type "text"`);
+                throw new Error(`Attribute "${attributeName}" must be of type "text"`);
             }
         } else if (attributeType === 'integer') {
             if (!Number.isInteger(value)) {
-                throw new Error(`Attribute "${attr}" must be of type "integer"`);
+                throw new Error(`Attribute "${attributeName}" must be of type "integer"`);
             }
         } else if (attributeType === 'float') {
             if (typeof value !== 'number' || Number.isNaN(value)) {
-                throw new Error(`Attribute "${attr}" must be of type "float"`);
+                throw new Error(`Attribute "${attributeName}" must be of type "float"`);
             }
         } else if (attributeType === 'location') {
             if (!value || typeof value.lat !== 'number' || typeof value.long !== 'number') {
-                throw new Error(`Attribute "${attr}" must be of type "location"`);
+                throw new Error(`Attribute "${attributeName}" must be of type "location"`);
             }
         } else if (attributeType === 'boolean') {
             if (typeof value !== 'boolean') {
-                throw new Error(`Attribute "${attr}" must be of type "boolean"`);
+                throw new Error(`Attribute "${attributeName}" must be of type "boolean"`);
             }
         } else if (attributeType === 'date') {
             if (isNaN(Date.parse(value))) {
-                throw new Error(`Attribute "${attr}" must be of type "date"`);
+                throw new Error(`Attribute "${attributeName}" must be of type "date"`);
             }
         }
     }

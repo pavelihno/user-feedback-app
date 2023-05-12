@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { api, setAuthToken } from '../../api';
 import { getErrorData } from '../utils';
+import { setCurrentUser } from '../reducers/auth';
 
 
 export const login = createAsyncThunk(
@@ -32,7 +33,10 @@ export const register = createAsyncThunk(
     }
 );
 
-export const logout = createAsyncThunk('auth/logout', () => { setAuthToken(false); });
+export const logout = createAsyncThunk('auth/logout', () => {
+    setAuthToken(false);
+    setCurrentUser(null);
+});
 
 export const auth = createAsyncThunk(
     'auth',

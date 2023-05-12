@@ -44,7 +44,7 @@ const ProductTypeForm = ({
                                         <TextField
                                             required
                                             fullWidth
-                                            label="Category Name"
+                                            label="Category name"
                                             name="name"
                                             value={name}
                                             onChange={onNameChange}
