@@ -124,7 +124,7 @@ const ProductListItem = ({ product }) => {
                     {
                         isAdmin && (
                             <Fragment>
-                                <IconButton component={Link} to={`/product/${product._id}`}>
+                                <IconButton component={Link} to={`/products/${product._id}`}>
                                     <Tooltip title="Edit product">
                                         <EditIcon />
                                     </Tooltip>

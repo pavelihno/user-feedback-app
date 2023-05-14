@@ -22,8 +22,8 @@ export const fetchProduct = createAsyncThunk(
     async (productId, { rejectWithValue }) => {
         try {
             const res = await api.get(`/products/${productId}`);
-            const productType = res.data;
-            return productType;
+            const product = res.data;
+            return product;
         } catch (err) {
             return rejectWithValue(getErrorData(err));
         }
@@ -48,8 +48,8 @@ export const createProduct = createAsyncThunk(
     async (formData, { rejectWithValue }) => {
         try {
             const res = await api.post('/products', formData);
-            const productType = res.data;
-            return productType;
+            const product = res.data;
+            return product;
         } catch (err) {
             return rejectWithValue(getErrorData(err));
         }
@@ -61,8 +61,8 @@ export const updateProduct = createAsyncThunk(
     async (formData, { rejectWithValue }) => {
         try {
             const res = await api.put(`/products/${formData.productId}`, formData);
-            const productType = res.data;
-            return productType;
+            const product = res.data;
+            return product;
         } catch (err) {
             return rejectWithValue(getErrorData(err));
         }
@@ -74,8 +74,8 @@ export const approveProduct = createAsyncThunk(
     async (productId, { rejectWithValue }) => {
         try {
             const res = await api.post(`/products/${productId}/approve`);
-            const productType = res.data;
-            return productType;
+            const product = res.data;
+            return product;
         } catch (err) {
             return rejectWithValue(getErrorData(err));
         }
