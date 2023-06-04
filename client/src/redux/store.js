@@ -5,6 +5,7 @@ import authReducer from './reducers/auth';
 import productTypeReducer from './reducers/productType';
 import attributeReducer from './reducers/attribute';
 import productReducer from './reducers/product';
+import reviewReducer from './reducers/review';
 import uploadReducer from './reducers/upload';
 
 
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     productType: productTypeReducer,
     attribute: attributeReducer,
     product: productReducer,
+    review: reviewReducer,
     upload: uploadReducer
 });
 

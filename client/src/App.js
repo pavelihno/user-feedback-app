@@ -15,6 +15,8 @@ import CreateProductTypeForm from './components/productType/CreateProductTypeFor
 import UpdateProductTypeForm from './components/productType/UpdateProductTypeForm';
 import CreateReviewForm from './components/review/CreateReviewForm';
 import UpdateReviewForm from './components/review/UpdateReviewForm';
+import ProductReviewList from './components/review/ProductReviewList';
+import UserReviewList from './components/review/UserReviewList';
 import { auth } from './redux/actions/auth';
 
 
@@ -25,11 +27,11 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />}></Route>
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      <Route path="/users/:id" element={<UpdateUserForm />} />
+      <Route path="/users" element={<UpdateUserForm />} />
 
       <Route path="/productTypes" element={<ProductTypeList />} />
       <Route path="/productTypes/new" element={<CreateProductTypeForm />} />
@@ -39,7 +41,8 @@ function App() {
       <Route path="/products/:id/new" element={<CreateProductForm />} />
       <Route path="/products/:id" element={<UpdateProductForm />} />
 
-      <Route path="/reviews/:id/list" element={<ReviewList />} />
+      <Route path="/reviews/:id/list" element={<ProductReviewList />} />
+      <Route path="/reviews" element={<UserReviewList />} />
       <Route path="/reviews/:id/new" element={<CreateReviewForm />} />
       <Route path="/reviews/:id" element={<UpdateReviewForm />} />
 

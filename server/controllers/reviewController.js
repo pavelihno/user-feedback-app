@@ -2,6 +2,7 @@ import { Review } from "../models/review.js";
 import { Product } from "../models/product.js";
 import { internalServerError, notFoundError, accessDeniedError } from '../utils/errors.js';
 import { deleteFile } from "../utils/fileStorage.js";
+import { User } from "../models/user.js";
 
 
 const isInvalidAccess = (req, review) => {
@@ -63,7 +64,33 @@ export const deleteReview = async (req, res) => {
 
 export const getReviews = async (req, res) => {
     try {
-        const reviews = await Review.find();
+        const reviews = await Review.find().sort({ createdAt: -1 });
+        return res.status(200).json(reviews);
+    } catch (error) {
+        return internalServerError(res, error.message);
+    }
+};
+
+export const getUserReviews = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return notFoundError(res, 'User not found');
+        }
+        const reviews = await Review.find({ createdBy: user._id }).sort({ createdAt: -1 });
+        return res.status(200).json(reviews);
+    } catch (error) {
+        return internalServerError(res, error.message);
+    }
+};
+
+export const getProductReviews = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return notFoundError(res, 'Product not found');
+        }
+        const reviews = await Review.find({ product: product._id }).sort({ createdAt: -1 });
         return res.status(200).json(reviews);
     } catch (error) {
         return internalServerError(res, error.message);
@@ -72,7 +99,15 @@ export const getReviews = async (req, res) => {
 
 export const getReview = async (req, res) => {
     try {
-        const review = await Review.findById(req.params.id).populate('createdBy');
+        const review = await Review.findById(req.params.id)
+            .populate('createdBy')
+            .populate({
+                path: 'product',
+                populate: {
+                    path: 'productType',
+                    model: 'ProductType'
+                }
+            });
         if (!review) {
             return notFoundError(res, 'Review not found');
         }
@@ -95,7 +130,7 @@ export const uploadReviewAttachments = async (req, res) => {
             review.attachments.push(file.path)
         }
         await review.save();
-        return res.status(200).json({ message: 'Attachments uploaded successfully' });
+        return res.status(200).json({ message: 'Attachments uploaded successfully', attachments: review.attachments });
     } catch (error) {
         return internalServerError(res, error.message);
     }
@@ -115,7 +150,7 @@ export const deleteReviewAttachments = async (req, res) => {
             deleteFile(path);
         }
         review.save();
-        return res.status(200).json({ message: 'Attachments deleted successfully' });
+        return res.status(200).json({ message: 'Attachments deleted successfully', attachments: review.attachments });
     } catch (error) {
         return internalServerError(res, error.message);
     }

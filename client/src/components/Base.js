@@ -57,7 +57,7 @@ const Base = ({ children }) => {
                             <Grid container spacing={2} alignItems="center" justifyContent="space-around">
                                 <Grid item><ProductDropMenu /></Grid>
                                 {
-                                    isAuth && (<Grid item><Button component={Link} color="inherit">My reviews</Button></Grid>)
+                                    isAuth && (<Grid item><Button component={Link} to="/reviews" color="inherit">My reviews</Button></Grid>)
                                 }
                                 {
                                     isAdmin && (
@@ -84,7 +84,7 @@ const Base = ({ children }) => {
                                 ) : (
                                     <Grid container spacing={2} justifyContent="center" alignItems="center">
                                         <Grid item>
-                                            <Button component={Link} to={`/users/${currentUser._id}`} color="inherit">
+                                            <Button component={Link} to={"/users"} color="inherit">
                                                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
                                                     <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
                                                         <AccountCircleRoundedIcon />

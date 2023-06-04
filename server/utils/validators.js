@@ -263,11 +263,10 @@ export const createReviewValidator = [
 export const updateReviewValidator = [
     body('title')
         .optional()
-        .trim()
         .notEmpty()
         .withMessage('Title is required'),
     body('text')
-        .trim()
+        .optional()
         .notEmpty()
         .withMessage('Text is required')
 ];
