@@ -64,7 +64,7 @@ export const deleteReview = async (req, res) => {
 
 export const getReviews = async (req, res) => {
     try {
-        const reviews = await Review.find().sort({ createdAt: -1 }).populate('createdBy');
+        const reviews = await Review.find().sort({ createdAt: -1 }).populate('createdBy').populate('product');
         return res.status(200).json(reviews);
     } catch (error) {
         return internalServerError(res, error.message);
@@ -77,7 +77,7 @@ export const getUserReviews = async (req, res) => {
         if (!user) {
             return notFoundError(res, 'User not found');
         }
-        const reviews = await Review.find({ createdBy: user._id }).sort({ createdAt: -1 }).populate('createdBy');
+        const reviews = await Review.find({ createdBy: user._id }).sort({ createdAt: -1 }).populate('createdBy').populate('product');
         return res.status(200).json(reviews);
     } catch (error) {
         return internalServerError(res, error.message);

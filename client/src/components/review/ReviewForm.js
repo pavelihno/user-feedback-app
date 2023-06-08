@@ -14,14 +14,11 @@ import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
 import IconButton from '@mui/material/IconButton';
 import RateReviewIcon from '@mui/icons-material/RateReview';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { baseUrl } from '../../api';
 import Base from '../Base';
 import ProductListItem from '../product/ProductListItem';
-import { fullWidthStyle } from '../../redux/utils';
+import { fullWidthStyle, renderStars, getFilePath } from '../../redux/utils';
 
 
 const ReviewForm = ({
@@ -36,18 +33,9 @@ const ReviewForm = ({
 }) => {
 
     const attachmentsInputRef = useRef(null);
-    const getAttachmentPath = fileName => { return `${baseUrl}/${fileName}` };
 
     const onStarClick = (index) => {
         onRatingChange(index + 1);
-    };
-
-    const renderStar = (index) => {
-        if (index < rating) {
-            return <StarIcon key={index} onClick={() => onStarClick(index)} />;
-        } else {
-            return <StarBorderIcon key={index} onClick={() => onStarClick(index)} />;
-        }
     };
 
     const onAttachmentUploadClick = () => {
@@ -95,7 +83,7 @@ const ReviewForm = ({
                                         />
                                     </Grid>
                                     <Grid item style={{ ...fullWidthStyle, marginBottom: '1rem' }}>
-                                        {[0, 1, 2, 3, 4].map((index) => renderStar(index))}
+                                        {renderStars(rating, onStarClick)}
                                     </Grid>
                                     <Grid item style={{ ...fullWidthStyle, marginBottom: '1rem' }}>
                                         <TextField
@@ -142,7 +130,7 @@ const ReviewForm = ({
                                                             <CardMedia
                                                                 component="img"
                                                                 sx={{ maxHeight: 250, maxWidth: 250 }}
-                                                                image={getAttachmentPath(attachment)}
+                                                                image={getFilePath(attachment)}
                                                             />
                                                         </Card>
                                                     ))}
