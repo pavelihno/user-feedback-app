@@ -22,7 +22,7 @@ import { getAttributeTypes } from './controllers/attributeController.js';
 
 
 const connectDB = async () => {
-    const MONGO_URI = `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_USER_PASSWORD}@mongo:${process.env.MONGODB_DOCKER_PORT}/${process.env.MONGODB_DATABASE}`;
+    const MONGO_URI = process.env.MONGODB_URL ? process.env.MONGODB_URL: `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_USER_PASSWORD}@mongo:${process.env.MONGODB_DOCKER_PORT}/${process.env.MONGODB_DATABASE}`;
 
     await mongoose
         .connect(MONGO_URI, {
