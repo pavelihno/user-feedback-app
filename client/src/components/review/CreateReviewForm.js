@@ -49,7 +49,7 @@ const CreateReviewForm = () => {
                 setTitle('');
                 setRating(0);
                 setText('');
-                navigate(`/reviews/${review._id}`);
+                navigate(`/reviews/${review._id}/edit`);
             })
             .catch(res => displayErrors(res, setErrors));
     };

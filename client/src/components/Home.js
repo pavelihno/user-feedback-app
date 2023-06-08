@@ -1,18 +1,27 @@
 import React from 'react';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Base from './Base';
-import { api } from '../api';
+import { fetchReviews } from '../redux/actions/review';
+import ReviewList from './review/ReviewList';
 
 
 const Home = () => {
+    const dispatch = useDispatch();
+
+    const reviews = useSelector(state => state.review.reviews);
+    const isLoading = useSelector(state => state.review.isLoading);
+
+    useEffect(() => {
+        dispatch(fetchReviews())
+    }, []);
+
     return (
-        <Base>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-            </Container>
-        </Base>
+        <ReviewList
+            header="Latest reviews"
+            reviews={reviews}
+            isLoading={isLoading}
+        />
     );
 };
 

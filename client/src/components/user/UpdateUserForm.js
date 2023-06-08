@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -8,13 +8,11 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import Paper from '@mui/material/Paper';
-import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
 
 import Base from '../Base';
-import { baseUrl } from '../../api';
 import { changeName, changePassword, uploadAvatar } from '../../redux/actions/user';
-import { displayErrors, fullWidthStyle } from '../../redux/utils';
+import { displayErrors, fullWidthStyle, MemoizedAvatar, getFilePath } from '../../redux/utils';
 
 
 const avatarStyle = { width: '8rem', height: '8rem', border: '0.1px solid lightgray' };
@@ -27,7 +25,7 @@ const UserDetail = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [avatarPath, _setAvatarPath] = useState('');
-    const setAvatarPath = (fileName) => { _setAvatarPath(`${baseUrl}/${fileName}`) };
+    const setAvatarPath = (fileName) => { _setAvatarPath(getFilePath(fileName)) };
     const [errors, setErrors] = useState({});
     const [changeNameSuccess, setChangeNameSuccess] = useState(false);
     const [changePasswordSuccess, setChangePasswordSuccess] = useState(false);
@@ -48,10 +46,6 @@ const UserDetail = () => {
             .then((res) => { setAvatarPath(res); })
             .catch((res) => { });
     };
-
-    const MemoizedAvatar = memo(({ avatarPath, onAvatarClick }) => (
-        <Avatar src={avatarPath} style={avatarStyle} onClick={onAvatarClick} />
-    ));
 
     const onAvatarClick = () => {
         document.getElementById('avatarFile').click();
@@ -108,7 +102,7 @@ const UserDetail = () => {
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid item style={fullWidthStyle} align="center">
-                            <MemoizedAvatar avatarPath={avatarPath} onAvatarClick={onAvatarClick} />
+                            <MemoizedAvatar avatarPath={avatarPath} avatarStyle={avatarStyle} onAvatarClick={onAvatarClick} />
                             <input
                                 id="avatarFile"
                                 type="file"

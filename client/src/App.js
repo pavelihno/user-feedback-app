@@ -18,6 +18,7 @@ import UpdateReviewForm from './components/review/UpdateReviewForm';
 import ProductReviewList from './components/review/ProductReviewList';
 import UserReviewList from './components/review/UserReviewList';
 import { auth } from './redux/actions/auth';
+import DetailReviewForm from './components/review/DetailReviewForm';
 
 
 function App() {
@@ -43,8 +44,9 @@ function App() {
 
       <Route path="/reviews/:id/list" element={<ProductReviewList />} />
       <Route path="/reviews" element={<UserReviewList />} />
+      <Route path="reviews/:id" element={<DetailReviewForm />} />
       <Route path="/reviews/:id/new" element={<CreateReviewForm />} />
-      <Route path="/reviews/:id" element={<UpdateReviewForm />} />
+      <Route path="/reviews/:id/edit" element={<UpdateReviewForm />} />
 
     </Routes>
   );

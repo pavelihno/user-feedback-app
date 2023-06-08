@@ -19,6 +19,7 @@ import { logout } from '../redux/actions/auth';
 import SearchBar from './SearchBar';
 import ProductDropMenu from './ProductDropMenu';
 import AdministrationDropMenu from './AdministrationDropMenu';
+import { MemoizedAvatar, getFilePath } from '../redux/utils';
 
 
 const Base = ({ children }) => {
@@ -86,9 +87,13 @@ const Base = ({ children }) => {
                                         <Grid item>
                                             <Button component={Link} to={"/users"} color="inherit">
                                                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-                                                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                                                        <AccountCircleRoundedIcon />
-                                                    </Avatar>
+                                                    {
+                                                        currentUser.avatarPath ? (
+                                                            <MemoizedAvatar avatarPath={getFilePath(currentUser.avatarPath)} avatarStyle={{ m: 1, bgcolor: 'primary.main' }} />
+                                                        ) : (
+                                                            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}><AccountCircleRoundedIcon /></Avatar>
+                                                        )
+                                                    }
                                                     <Typography variant="caption">{currentUser.name}</Typography>
                                                 </Box>
                                             </Button>

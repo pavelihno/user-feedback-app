@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 
 import Base from "../Base";
+import ReviewListItem from './ReviewListItem';
 import { fullWidthStyle } from '../../redux/utils';
 
 const ReviewList = ({ header, subheader, reviews, isLoading = true }) => {
@@ -30,7 +31,7 @@ const ReviewList = ({ header, subheader, reviews, isLoading = true }) => {
                         </Grid>
                         <Grid container sx={{ marginTop: '1.5rem' }} spacing={5} maxWidth="lg">
                             {!isLoading ? (reviews.map((review, index) => (
-                                <Card key={index}>123</Card>
+                                <ReviewListItem  key={review._id} review={review} />
                             ))) : (Array.from({ length: 4 }).map((_, index) => (
                                 <Grid item maxWidth="lg" key={index} style={{ minWidth: '17rem' }}>
                                     <Card style={fullWidthStyle}><Skeleton variant="rounded" style={{ ...fullWidthStyle, minHeight: '20rem' }} /></Card>
