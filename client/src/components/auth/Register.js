@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { register } from '../../redux/actions/auth';
 import Base from '../Base';
 import { selectIsAuth } from '../../redux/reducers/auth';
+import { displayErrors } from '../../redux/utils';
 
 
 const Register = () => {
@@ -39,20 +40,10 @@ const Register = () => {
         }
         dispatch(register(formData))
             .unwrap()
-            .then((res) => {
+            .then(res => {
                 return <Navigate to="/" />;
             })
-            .catch((res) => {
-                if (Array.isArray(res.error)) {
-                    setErrors(res.error.reduce((map, { path, msg }) => {
-                        map[path] = msg;
-                        return map;
-                    }, {}));
-                } else {
-                    setErrors({ message: res.error });
-                }
-                return;
-            });
+            .catch(res => displayErrors(res, setErrors));
     };
 
     const isAuth = useSelector(selectIsAuth)

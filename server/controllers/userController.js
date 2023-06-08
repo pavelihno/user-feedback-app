@@ -19,7 +19,7 @@ export const createUser = async (req, res) => {
         user = new User({ email, name });
         await user.setPassword(password)
         await user.save();
-        const token = signJWT(user._id);
+        const token = signJWT(user._id, user.password);
         return res.status(200).json({ user, token });
     } catch (error) {
         return internalServerError(res, error.message);
@@ -39,10 +39,10 @@ export const getUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
-            return notFoundError('User not found');
+            return notFoundError(res, 'User not found');
         }
         if (isInvalidAccess(req, user)) {
-            return accessDeniedError('Access denied');
+            return accessDeniedError(res, 'Access denied');
         }
         return res.status(200).json(user);
     } catch (error) {
@@ -55,7 +55,7 @@ export const updateUser = async (req, res) => {
         const { name } = req.body;
         const user = await User.findById(req.user.id);
         if (!user) {
-            return notFoundError('User not found');
+            return notFoundError(res, 'User not found');
         }
         user.name = name;
         await user.save();
@@ -69,10 +69,10 @@ export const deleteUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
-            return notFoundError('User not found');
+            return notFoundError(res, 'User not found');
         }
         if (isInvalidAccess(req, user)) {
-            return accessDeniedError('Access denied');
+            return accessDeniedError(res, 'Access denied');
         }
         await user.deleteOne();
         return res.status(200).json({ message: 'User deleted successfully' });
@@ -86,7 +86,7 @@ export const changePassword = async (req, res) => {
         const { password } = req.body;
         const user = await User.findById(req.user.id);
         if (!user) {
-            return notFoundError('User not found');
+            return notFoundError(res, 'User not found');
         }
         await user.setPassword(password);
         await user.save();
@@ -99,15 +99,16 @@ export const changePassword = async (req, res) => {
 export const uploadAvatar = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
+        const avatarPath = req.file.path;
         if (!user) {
             return notFoundError(res, 'User not found');
         }
         if (user.avatarPath) {
             deleteFile(user.avatarPath);
         }
-        user.avatarPath = req.file.path;
+        user.avatarPath = avatarPath;
         await user.save();
-        return res.status(200).json({ message: 'Avatar uploaded successfully' });
+        return res.status(200).json({ message: 'Avatar uploaded successfully', avatarPath });
     } catch (error) {
         return internalServerError(res, error.message);
     }

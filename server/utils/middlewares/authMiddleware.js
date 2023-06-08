@@ -9,7 +9,7 @@ const getUser = async (req) => {
         const decodedToken = verifyJWT(token);
         const user = await User.findById(decodedToken.userId);
         return user;
-    }  catch (error) {
+    } catch (error) {
         return null;
     }
 };

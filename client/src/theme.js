@@ -1,6 +1,6 @@
 import 'typeface-roboto';
 import 'typeface-open-sans';
-import { purple, blue, grey, indigo, blueGrey } from '@mui/material/colors';
+import { blue } from '@mui/material/colors';
 
 import { createTheme } from '@mui/material/styles';
 
@@ -12,7 +12,9 @@ const theme = createTheme({
     },
     palette: {
         primary: blue,
-        secondary: grey
+        secondary: {
+            main: '#f6f1f1'
+        }
     },
 });
 

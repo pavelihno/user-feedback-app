@@ -29,8 +29,7 @@ export const productSchema = new mongoose.Schema({
     approvedBy: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            unique: true
+            ref: 'User'
         }],
         default: []
     },
@@ -45,25 +44,25 @@ productSchema.methods.approve = async function (user) {
     try {
         const userId = user._id;
         if (this.approvedBy.includes(userId) || this.isApproved) {
-            return false;
+            return;
         }
-        this.approvedBy.push(userId);
+        this.approvedBy.addToSet(userId);
         const isAdmin = user.role === 'admin';
         if (isAdmin) {
             this.isApproved = true;
             await this.save();
-            return true;
+            return;
         }
         const nonAdminApprovals = await User.countDocuments({ _id: { $in: this.approvedBy }, role: { $ne: 'admin' } });
         if (nonAdminApprovals >= 3) {
             this.isApproved = true;
             await this.save();
-            return true;
+            return;
         }
         await this.save();
         return false;
     } catch (error) {
-        return false;
+        throw error;
     }
 };
 

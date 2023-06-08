@@ -14,7 +14,7 @@ export const login = async (req, res) => {
         if (!isPasswordCorrect) {
             return authError(res, 'Invalid email or password');
         }
-        const token = signJWT(user._id);
+        const token = signJWT(user._id, user.password);
         return res.status(200).json({ user, token });
     } catch (error) {
         return internalServerError(res, error.message);

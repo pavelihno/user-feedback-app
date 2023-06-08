@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = `http://${process.env.REACT_APP_SERVER_URL}`;
+export const baseUrl = `http://${process.env.REACT_APP_SERVER_URL}`;
 
 export const api = axios.create({
     baseURL: baseUrl,
@@ -21,6 +21,6 @@ export const setAuthToken = (token) => {
     if (token) {
         window.localStorage.setItem('token', token);
     } else {
-        window.localStorage.removeItem(token);
+        window.localStorage.removeItem('token');
     }
 };

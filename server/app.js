@@ -6,7 +6,7 @@ import { login, auth } from './controllers/authController.js';
 import { changePassword, createUser, deleteUser, getUser, getUsers, updateUser, uploadAvatar } from './controllers/userController.js';
 import { createProductType, updateProductType, deleteProductType, getProductType, getProductTypes } from './controllers/productTypeController.js';
 import { createProduct, updateProduct, deleteProduct, getProduct, getProducts, approveProduct } from './controllers/productController.js';
-import { createReview, updateReview, deleteReview, getReview, getReviews, uploadReviewAttachments, deleteReviewAttachments } from './controllers/reviewController.js';
+import { createReview, updateReview, deleteReview, getReview, getReviews, getUserReviews, getProductReviews, uploadReviewAttachments, deleteReviewAttachments } from './controllers/reviewController.js';
 import { createComment, updateComment, deleteComment, getComment, getComments } from './controllers/commentController.js';
 import {
     validateRequest, createUserValidator, loginValidator, objectIdValidator,
@@ -18,10 +18,11 @@ import {
 } from './utils/validators.js';
 import { requireAvatar, requireAttachments } from './utils/middlewares/uploadMiddleware.js';
 import { requireAdmin, requireAuth } from './utils/middlewares/authMiddleware.js';
+import { getAttributeTypes } from './controllers/attributeController.js';
 
 
 const connectDB = async () => {
-    const MONGO_URI = `${process.env.MONGODB_URL}`;
+    const MONGO_URI = `mongodb://${process.env.MONGODB_ROOT_USER}:${process.env.MONGODB_ROOT_USER_PASSWORD}@mongo:${process.env.MONGODB_DOCKER_PORT}/${process.env.MONGODB_DATABASE}`;
 
     await mongoose
         .connect(MONGO_URI, {
@@ -29,7 +30,7 @@ const connectDB = async () => {
             useUnifiedTopology: true,
         })
         .then(() => console.log("Successfully connected to DB"))
-        .catch((e) => {
+        .catch(e => {
             console.log(`Error while connecting to DB: ${e.message}`);
         });
 };
@@ -38,11 +39,12 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use('/storage', express.static('storage'));
 
 connectDB();
 
-app.get('/', async (req, res) => {
-    return res.status(200).json({ success: true });
+app.get('/', requireAuth, (req, res) => {
+    res.send('Home Route');
 });
 
 
@@ -64,14 +66,17 @@ app.post('/users/uploadAvatar', requireAuth, requireAvatar, validateRequest(uplo
 app.post('/productTypes', requireAdmin, validateRequest(createProductTypeValidator), createProductType);
 app.put('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator, updateProductTypeValidator), updateProductType);
 app.delete('/productTypes/:id', requireAdmin, validateRequest(objectIdValidator), deleteProductType);
-app.get('/productTypes', requireAuth, getProductTypes);
-app.get('/productTypes/:id', requireAuth, validateRequest(objectIdValidator), getProductType);
+app.get('/productTypes', getProductTypes);
+app.get('/productTypes/:id', validateRequest(objectIdValidator), getProductType);
+
+// attribute
+app.get('/attributes/types', requireAdmin, getAttributeTypes);
 
 // product
 app.post('/products', requireAuth, validateRequest(createProductValidator), createProduct);
 app.put('/products/:id', requireAuth, validateRequest(objectIdValidator, updateProductValidator), updateProduct);
 app.delete('/products/:id', requireAuth, validateRequest(objectIdValidator), deleteProduct);
-app.get('/products', getProducts);
+app.get('/products/:id/list', validateRequest(objectIdValidator), getProducts);
 app.get('/products/:id', validateRequest(objectIdValidator), getProduct);
 app.post('/products/:id/approve', requireAuth, validateRequest(objectIdValidator), approveProduct);
 
@@ -80,9 +85,11 @@ app.post('/reviews', requireAuth, validateRequest(createReviewValidator), create
 app.put('/reviews/:id', requireAuth, validateRequest(objectIdValidator, updateReviewValidator), updateReview);
 app.delete('/reviews/:id', requireAuth, validateRequest(objectIdValidator), deleteReview);
 app.get('/reviews', getReviews);
+app.get('/reviews/user/:id', validateRequest(objectIdValidator), getUserReviews);
+app.get('/reviews/:id/list', validateRequest(objectIdValidator), getProductReviews);
 app.get('/reviews/:id', validateRequest(objectIdValidator), getReview);
 app.post('/reviews/:id/attachments', requireAuth, requireAttachments, validateRequest(objectIdValidator, uploadAttachmentsValidator), uploadReviewAttachments);
-app.delete('/reviews/:id/attachments', requireAuth, validateRequest(objectIdValidator), deleteReviewAttachments);
+app.post('/reviews/:id/attachments/delete', requireAuth, validateRequest(objectIdValidator), deleteReviewAttachments);
 
 // comment
 app.post('/comments', requireAuth, validateRequest(createCommentValidator), createComment);

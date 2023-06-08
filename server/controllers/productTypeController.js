@@ -39,7 +39,7 @@ export const deleteProductType = async (req, res) => {
 
 export const getProductTypes = async (req, res) => {
     try {
-        const productTypes = await ProductType.find();
+        const productTypes = await ProductType.find().sort({ name: 1 });
         return res.status(200).json(productTypes);
     } catch (error) {
         return internalServerError(res, error.message);
